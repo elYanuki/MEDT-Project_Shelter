@@ -1,0 +1,441 @@
+/************ Variables ************/
+/************ General ************/
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  accent-color: hsl(43, 100%, 57%);
+}
+
+img {
+  width: 100%;
+  display: block;
+}
+
+body {
+  background-color: rgb(20, 20, 20);
+  color: hsl(0, 0%, 100%);
+  font-family: sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  background-color: rgb(20, 20, 20);
+  scroll-behavior: smooth;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  color: hsl(0, 0%, 100%);
+  cursor: pointer;
+  user-select: none;
+}
+
+/************ Main Style ************/
+main {
+  display: flex;
+  height: 93dvh;
+  position: relative;
+}
+
+hr {
+  border-color: hsl(0, 0%, 55%);
+  margin-block: 0.5rem;
+}
+
+/*---------- nav ----------*/
+nav {
+  width: 100%;
+  height: 7dvh;
+  background-color: hsl(0, 0%, 12%);
+  display: flex;
+  justify-content: center;
+}
+nav h1 {
+  font-size: 6dvh;
+  vertical-align: middle;
+  margin-block: auto;
+  text-transform: uppercase;
+  font-family: "Kanit", sans-serif;
+}
+
+/*---------- aside ----------*/
+main aside {
+  width: fit-content;
+  min-width: 20%;
+  background-color: hsl(0, 0%, 15%);
+  padding: 0.5rem 0.8rem 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+main aside hr {
+  margin-block: 0.3rem;
+}
+
+main aside .buttons {
+  display: flex;
+  gap: 1vw;
+}
+
+main aside .buttons button {
+  text-transform: uppercase;
+  font-family: "Kanit", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  display: block;
+  color: hsl(0, 0%, 55%);
+  transition: color 0.2s;
+}
+main aside .buttons button:hover {
+  color: hsl(0, 0%, 80%);
+}
+main aside .buttons button.selected {
+  color: hsl(0, 0%, 100%);
+}
+
+main aside ul {
+  list-style-type: none;
+}
+
+main aside ul li {
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  font-weight: 200;
+  font-family: "Kanit", sans-serif;
+  color: hsl(0, 0%, 55%);
+  margin-top: 0.3rem;
+  margin-left: 1.5rem;
+  position: relative;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+main aside ul li:hover {
+  color: hsl(0, 0%, 80%);
+}
+main aside ul li span {
+  position: relative;
+}
+main aside ul li:not(:has(ul))::before, main aside ul li span::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  margin-right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: hsl(0, 0%, 100%);
+  aspect-ratio: 1;
+  width: 0.4rem;
+  rotate: 45deg;
+}
+main aside ul li.selected {
+  font-weight: 300;
+  color: hsl(0, 0%, 100%);
+}
+main aside ul li.selected::before {
+  background-color: hsl(43, 100%, 57%);
+}
+
+main aside .editButton {
+  margin-top: auto;
+  text-decoration: underline;
+  text-transform: uppercase;
+  font-family: montserrat;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding-block: 0.8rem;
+}
+main aside .editButton:hover {
+  text-decoration-color: transparent;
+}
+
+/*---------- animals ----------*/
+main .animals {
+  width: auto;
+  height: 100%;
+  background-color: hsl(0, 0%, 6%);
+  flex-grow: 1;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+main .animals .header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.3rem;
+}
+main .animals > .bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10vh;
+  background: linear-gradient(0deg, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: hsl(0, 0%, 6%);
+}
+
+main .animals .header .path {
+  font-family: "Kanit", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  color: hsl(0, 0%, 55%);
+  user-select: none;
+}
+main .animals .header .path span {
+  cursor: pointer;
+  transition: color 0.1s;
+}
+main .animals .header .path span:hover {
+  color: hsl(0, 0%, 80%);
+}
+main .animals .header .path span.thispage {
+  color: hsl(0, 0%, 100%);
+}
+
+main .animals .header #add-animal {
+  padding: 0.15rem 0.8rem;
+  border: 0.15rem solid hsl(43, 100%, 57%);
+  border-radius: 1rem;
+  color: hsl(43, 100%, 57%);
+  font-weight: 300;
+  font-family: "Kanit", sans-serif;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+main .animals .header #add-animal:hover {
+  font-weight: 500;
+  color: hsl(0, 0%, 6%);
+  background-color: hsl(43, 100%, 57%);
+}
+
+main .animals .content {
+  display: flex;
+  gap: 1rem;
+  overflow: auto;
+}
+main .animals .content::-webkit-scrollbar {
+  display: none;
+}
+main .animals .content .column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  gap: 1rem;
+}
+
+main .animals .content .animal {
+  background-color: hsl(0, 0%, 12%);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-family: "montserrat", "sans-serif";
+}
+main .animals .content .animal h2 {
+  font-size: 2rem;
+  font-weight: 500;
+  font-family: "Kanit", sans-serif;
+  text-transform: uppercase;
+  color: hsl(43, 100%, 57%);
+}
+main .animals .content .animal hr.accent {
+  border-color: hsl(43, 100%, 57%);
+}
+main .animals .content .animal span.label {
+  text-transform: uppercase;
+  color: hsl(0, 0%, 55%);
+  margin-right: 0.5rem;
+  text-decoration: none;
+}
+main .animals .content .animal span.link {
+  text-decoration: underline;
+  text-underline-offset: 0.1rem;
+  text-decoration-color: hsl(0, 0%, 80%);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+main .animals .content .animal span.link:hover {
+  color: hsl(0, 0%, 80%);
+  text-decoration-color: transparent;
+}
+main .animals .content .animal p {
+  line-height: 130%;
+}
+main .animals .content .animal p.note {
+  color: hsl(0, 0%, 55%);
+}
+main .animals .content .animal p.subtext {
+  font-weight: 300;
+}
+main .animals .content .animal p:focus {
+  outline: 1px solid hsl(0, 0%, 55%);
+  border: none;
+  border-radius: 0.2rem;
+}
+main .animals .content .animal p[contenteditable=true] {
+  padding: 0.1rem;
+}
+main .animals .content .animal .top {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+}
+main .animals .content .animal .top .left {
+  flex-grow: 1;
+}
+main .animals .content .animal .top .imgbox {
+  aspect-ratio: 1;
+  margin-left: 0.5rem;
+  height: 5.5rem;
+  box-sizing: border-box;
+  background-image: url(./img/michi.jpeg);
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5rem;
+}
+
+/*---------- login ----------*/
+main.login {
+  /*TODO this is offset i think*/
+  background: url("./img/login-background.svg"), radial-gradient(circle, hsl(0, 0%, 6%) 0%, hsl(0, 0%, 6%) 70%, hsl(0, 0%, 9%) 100%);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: grid;
+  place-items: center;
+}
+
+#login-container {
+  background-color: hsl(0, 0%, 12%);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  width: 30vw;
+  box-sizing: border-box;
+}
+#login-container h2 {
+  font-size: 2.2rem;
+  font-family: "Kanit", sans-serif;
+  font-weight: 200;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+#login-container input {
+  text-transform: uppercase;
+  background-color: transparent;
+  border: none;
+  border-bottom: 0.1rem solid hsl(0, 0%, 55%);
+  padding: 0.2rem;
+  color: hsl(0, 0%, 100%);
+  margin-bottom: 2rem;
+  transition: border 0.2s;
+  width: 100%;
+}
+#login-container input:focus {
+  outline: none;
+  border-color: hsl(43, 100%, 57%);
+}
+#login-container input:last-of-type {
+  margin-bottom: 0rem;
+}
+#login-container .error {
+  color: hsl(0, 52%, 60%);
+  margin-bottom: 2rem;
+  margin-top: 0.8rem;
+}
+#login-container .error .spacer {
+  color: gray;
+}
+#login-container .info {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: hsl(0, 0%, 80%);
+  text-transform: uppercase;
+}
+
+#login-container .buttons {
+  display: flex;
+  justify-content: space-between;
+}
+#login-container .buttons button {
+  color: hsl(43, 100%, 57%);
+  padding: 0.3rem 0.5rem;
+  font-family: "Kanit", sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  transition: color 0.3s, background-color 0.3s;
+}
+#login-container .buttons button.main {
+  padding: 0.3rem 0.8rem;
+  border-style: solid;
+  border-color: hsl(43, 100%, 57%);
+  border-width: 0.1rem;
+  border-radius: 0.5rem;
+}
+#login-container .buttons button.main:hover {
+  background-color: hsl(43, 100%, 57%);
+  color: hsl(0, 0%, 12%);
+}
+#login-container .buttons button.second {
+  position: relative;
+}
+#login-container .buttons button.second::before {
+  content: "";
+  height: 0.08rem;
+  top: 80%;
+  background-color: hsl(43, 100%, 57%);
+  width: 0rem;
+  display: block;
+  position: absolute;
+  transition: width 0.2s ease-out;
+}
+#login-container .buttons button.second:hover::before {
+  color: hsl(43, 100%, 50%);
+  width: 90%;
+}
+
+#login-container section {
+  display: none;
+}
+#login-container section.active {
+  display: block;
+}
+
+/************ PopupEngine Config ************/
+.popupEngineModalContent {
+  background-color: hsl(0, 0%, 12%);
+  color: hsl(0, 0%, 100%);
+}
+
+/************ Imports ************/
+/************ Keyframes ************/
+/************ Responsive ************/
+@media screen and (max-width: 1150px) { /*tablet*/
+  #login-container {
+    width: 50vw;
+  }
+  #login-container input {
+    margin-bottom: 1rem;
+  }
+}
+@media screen and (max-width: 600px) { /*phone*/
+  #login-container {
+    width: 90vw;
+  }
+  main.login {
+    background-size: cover;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

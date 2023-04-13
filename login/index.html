@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../style.css">
+    <script src="../js/login.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <h1>Logo</h1>
+    </nav>
+    <main class="login">
+        <div id="login-container">
+            <section class="signin">
+                <h2>Sign in</h2>
+                <input type="text" placeholder="shelter email">
+                <input type="password" placeholder="password">
+                <p class="error"></p>
+                <div class="buttons">
+                    <button class="second" onclick="render('signup')">create Shelter</button>
+                    <button class="main" onclick="confirm()">Sign in</button>
+                </div>
+            </section>
+            <section class="signup">
+                <h2>Sign in</h2>
+                <input type="text" placeholder="shelter name">
+                <input type="text" placeholder="shelter email">
+                <br>
+                <p class="info">shelter</p>
+                <input type="password" placeholder="password">
+                <input type="password" placeholder="repeat password">
+                <br>
+                <p class="info">admin</p>
+                <input type="password" placeholder="password">
+                <input type="password" placeholder="repeat password">
+                <p class="error"></p>
+                <div class="buttons">
+                    <button class="main" onclick="confirm()">create shelter</button>
+                    <button class="second" onclick="render('signin')">Sign in</button>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

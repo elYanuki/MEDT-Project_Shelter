@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>Dashboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./style.css">
+	<script src='js/script.js' defer></script>
+    <script src="js/popupEngine.js"></script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+    <?php
+    ?>
+<body>
+	<nav>
+		<h1>Tierheim Hintertupfing</h1>
+	</nav>
+	<main>
+		<aside>
+			<div class="buttons">
+				<button class="selected">rooms</button>
+				<button>types</button>
+				<button>owners</button>
+			</div>
+
+			<hr>
+
+			<section class="content">
+				<ul>
+					<li>punkt</li>
+					<li>punkt</li>
+					<li>
+						<span>punkt</span>
+						<ul>
+							<li>unter</li>
+							<li>unter</li>
+							<li>unter</li>
+						</ul>
+					</li>
+					<li>punkt</li>
+				</ul>
+			</section>
+			<p class="editButton">edit shelter</p>
+		</aside>
+		<div class="animals">
+			<div class="header">
+                <p class="path"><span>all-animals</span> / <span>something</span> / <span class="thispage">hunde</span></p>
+				<button id="add-animal" onclick="addAnimal()">add-animal</button>
+			</div>
+
+			<div class="content">
+				<div class="column"></div>
+				<div class="column"></div>
+				<div class="column"></div>
+			</div>
+
+			<div class="bottom"></div>
+		</div>
+	</main>
+</body>
+</html>
