@@ -61,7 +61,7 @@ function confirm(){
             if(data.emailUsed === true){
                 showError(["An account already exists with this email."])
             }
-            else if(answer.loggedIn === true){
+            else if(data.loggedIn === true){
                 window.location.replace(document.location.href.replace("/login", ""));
             }
 

@@ -1,6 +1,6 @@
 let shelterName = "will be aquired from the login"
 let animalColumns //number of columns currently displayed
-let asideData
+let filterData = []
 
 checkLogin()
 
@@ -25,17 +25,17 @@ function checkLogin(){
         });
 }
 
-getAsideData()
-function getAsideData(){
-    fetch(`./backend/user.php/getAsideData`)
+getFilterData()
+function getFilterData(){
+    fetch(`./backend/user.php/getFilterData`)
         .then((response) => {
             return response.json()
         })
         .then(answer=>{
-            console.log(answer.data)
-            lookups = answer.data
+            filterData = answer.data
+            console.log(filterData)
 
-            renderAside(answer.data)
+            renderAside()
             getAnimals()
         })
         .catch((error) => {
@@ -49,15 +49,9 @@ function getAnimals(){
             return response.json()
         })
         .then(answer=>{
-            console.log(answer.data)
+            animalData = answer.data || []
 
-            document.querySelectorAll(".animals .content .column").forEach((elem) => {
-                elem.innerHTML = ""
-            })
-
-            answer.data.forEach((animal)=>{
-                renderAnimal(animal);
-            })
+            renderAnimals()
         })
         .catch((error) => {
             console.error("Error:", error);
@@ -115,8 +109,28 @@ function addAnimal(){
             getAnimals()
         })
         .catch((error) => {
-            console.error("Error:", error);
+            console.error(`Error:`, error);
         });
+}
+
+function renderAnimals(sort, ID, breed){
+    const path = document.querySelector(".animals .header .path")
+    path.innerHTML = `<span onclick="renderAnimals()">all-animals</span>`
+    if(sort)
+    path.innerHTML += `/ <span onclick="${breed ? `renderAnimals('${sort}', ${ID})` : ''}">${filterData[sort][ID].name}</span>`
+    if(breed)
+    path.innerHTML += `/ <span>${filterData.breedID[breed].name}</span>`
+
+    document.querySelectorAll(".animals .content .column").forEach((elem) => {
+        elem.innerHTML = ""
+    })
+
+    animalData.forEach((animal)=>{
+        if(sort && parseInt(animal[sort]) !== ID) return
+        if(breed && (animal.breedID !== breed || !animal.breedID)) return
+
+        renderAnimal(animal);
+    })
 }
 
 /**
@@ -124,13 +138,11 @@ function addAnimal(){
  * @param data optional json object that contains all the date of the animal you want to add
  */
 function renderAnimal(data){
-    console.log(data)
-
     let birthdateObject = new Date(data.birthdate)
 
     let processedData = {
         gender: data.gender === 0 ? "male" : "female",
-        age: data.birthdate ? Math.abs(new Date(Date.now() - birthdateObject.getTime()).getUTCFullYear() - 1970) : "unkown",
+        age: data.birthdate ? Math.abs(new Date(Date.now() - birthdateObject.getTime()).getUTCFullYear() - 1970) : "unknown",
         note: data.note || "",
         owner: data.owner_name || shelterName
     }
@@ -144,11 +156,11 @@ function renderAnimal(data){
     })*/
 
     let animal =
-        `<section class="animal">
+        `<section class="animal" data-id="${data.ID}">
             <div class="top">
                 <div class="left">
-                    <h2>${data.name}</h2>
-                    <p class="subtext"><span class="link">${data.type_name}</span> • ${data.breed_name || "unknown"} • ${processedData.gender}</p>
+                    <h2 contenteditable="true">${data.name}</h2>
+                    <p class="subtext"><span class="link" onclick="editProperty('typeID', this)">${data.type_name}</span> • ${data.breed_name || "unknown"} • ${processedData.gender}</p>
                     <hr class="accent">
                 </div>
                 <div class="imgbox" style="background-image: ${data.image}"></div>
@@ -156,12 +168,12 @@ function renderAnimal(data){
 
             <div class="bottom">
                 <p class="birthdate">
-                <span class="label">birthdate</span>${data.birthdate}
+                <span class="label">birthdate</span>${data.birthdate || "unknown"}
                 <span class="label"> • age</span>${processedData.age}</p>
                 <p class="room"><span class="label">ROOM</span><span class="link">${data.room_name}</span></p>
                 <br>
                 <p class="food">
-                    <span class="label">menu</span>${data.menu}
+                    <span class="label">menu</span>${data.menu || "unkown"}
                     <br><span class="label">feedtimes</span>${feedTimeString}
                 </p>
                 <br>
@@ -183,27 +195,34 @@ function renderAnimal(data){
     column.innerHTML += animal
 }
 
-function renderAside(data){
-    let html = generateSimpelAside("owners", data.owners)
-    html += generateSimpelAside("rooms", data.rooms)
+let editPopup = document.querySelector("#editPopup")
+function editProperty(type, elem){
+    let rect = elem.getBoundingClientRect()
+    editPopup.style.top = rect.top - document.querySelector("nav").clientHeight + rect.height + "px"
+    editPopup.style.left = rect.left - document.querySelector("aside").clientWidth + "px"
+}
+
+function renderAside(){
+    let html = generateSimpelAside("ownerID", filterData.ownerID)
+    html += generateSimpelAside("roomID", filterData.roomID)
 
     let typeHtml = document.createElement("ul")
     typeHtml.classList.add("types")
     let lastType = -1
     let listItem
     let listObject
-    data.animalTypes.forEach(item => {
+    console.log(filterData.typeID)
+    filterData.animalTypesAndBreeds.forEach(item => {
         if(item.type_id !== lastType){
             if(listItem)typeHtml.appendChild(listItem)
 
             lastType = item.type_id
             listItem = document.createElement("li")
-            listItem.onclick = ()=>{loadAnimals("types", item.type_id)}
-            listItem.innerHTML = `<span>${item.type_name}</span>`
+            listItem.innerHTML = `<span onclick="renderAnimals('typeID', ${item.type_id})">${item.type_name}</span>`
             listObject = document.createElement("ul")
             listItem.appendChild(listObject)
         }
-        listObject.innerHTML += `<li>${item.breed_name}</li>`
+        listObject.innerHTML += `<li onclick="renderAnimals('typeID', ${item.type_id}, ${item.breed_id})">${item.breed_name}</li>`
     })
     typeHtml.appendChild(listItem)
 
@@ -214,12 +233,8 @@ function renderAside(data){
 function generateSimpelAside(name, data){
     let items = ""
     data.forEach(item => {
-        items += `<li onClick="loadAnimals(${name}, ${item.ID})">${item.name}</li>`
+        items += `<li onClick="renderAnimals(${name}, ${item.type_id})">${item.name}</li>`
     })
 
    return `<ul class="${name}">${items}</ul>`
-}
-
-function loadAnimals(sort, ID, breed){
-    
 }

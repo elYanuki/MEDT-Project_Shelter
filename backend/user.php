@@ -54,11 +54,13 @@
         $response->loggedIn = true;
         $response->name = $users->getName($_SESSION["userEmail"]);
 
-        if($type == "getAsideData"){
+        if($type == "getFilterData"){
             $response->data = array(
-                "animalTypes" => $users->getAnimaltypes(),
-                "owners" => $users->getOwners(),
-                "rooms" => $users->getRooms()
+                "typeID" => $users->getAnimalTypes(),
+                "breedID" => $users->getAnimalBreeds(),
+                "animalTypesAndBreeds" => $users->getAnimalTypesAndBreeds(),
+                "ownerID" => $users->getOwners(),
+                "roomID" => $users->getRooms()
             );
         }
     }

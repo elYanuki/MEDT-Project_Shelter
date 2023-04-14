@@ -63,7 +63,7 @@ class UserRepository
         }
     }
 
-    function getAnimaltypes(){
+    function getAnimalTypesAndBreeds(){
         $sql = "select at.ID as type_id, at.name as type_name, ab.id as breed_id, ab.name as breed_name from animal_type at join animal_breed ab on at.ID = ab.animal_type_ID
                 where at.shelter_email = '{$_SESSION['userEmail']}'";
         try {
@@ -82,6 +82,38 @@ class UserRepository
 
     function getOwners(){
         $sql = "select ID, name, adress, tel, email, note from owner where shelter_email = '{$_SESSION['userEmail']}'";
+        try {
+            $result = $this->connection->query($sql);
+
+            $rows = array();
+            while ($row = $result->fetch_assoc()) {
+                $rows[$row["ID"]] = $row;
+            }
+
+            return $rows;
+        } catch (mysqli_sql_exception $err) {
+            echo "SQL error occurred: " . $err->getMessage();
+        }
+    }
+
+    function getAnimalTypes(){
+        $sql = "select ID, name from animal_type where shelter_email = '{$_SESSION['userEmail']}'";
+        try {
+            $result = $this->connection->query($sql);
+
+            $rows = array();
+            while ($row = $result->fetch_assoc()) {
+                $rows[$row["ID"]] = $row;
+            }
+
+            return $rows;
+        } catch (mysqli_sql_exception $err) {
+            echo "SQL error occurred: " . $err->getMessage();
+        }
+    }
+
+    function getAnimalBreeds(){
+        $sql = "select ID, name, animal_type_ID from animal_breed where shelter_email = '{$_SESSION['userEmail']}'";
         try {
             $result = $this->connection->query($sql);
 
@@ -134,3 +166,4 @@ class UserRepository
         }
     }
 }
+?>

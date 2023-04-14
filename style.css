@@ -77,12 +77,11 @@ main aside hr {
   margin-block: 0.3rem;
 }
 
-main aside .buttons {
+main aside .buttons.top {
   display: flex;
   gap: 1vw;
 }
-
-main aside .buttons button {
+main aside .buttons.top button {
   text-transform: uppercase;
   font-family: "Kanit", sans-serif;
   font-size: 1.3rem;
@@ -91,10 +90,10 @@ main aside .buttons button {
   color: hsl(0, 0%, 55%);
   transition: color 0.2s;
 }
-main aside .buttons button:hover {
+main aside .buttons.top button:hover {
   color: hsl(0, 0%, 80%);
 }
-main aside .buttons button.selected {
+main aside .buttons.top button.selected {
   color: hsl(0, 0%, 100%);
 }
 
@@ -113,6 +112,7 @@ main aside ul li {
   position: relative;
   transition: all 0.2s;
   cursor: pointer;
+  user-select: none;
 }
 main aside ul li:hover {
   color: hsl(0, 0%, 80%);
@@ -140,9 +140,15 @@ main aside ul li.selected::before {
   background-color: hsl(43, 100%, 57%);
 }
 
-main aside .editButton {
+main aside .buttons.bottom {
   margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}
+main aside .buttons.bottom button {
+  color: hsl(0, 0%, 80%);
   text-decoration: underline;
+  text-decoration-color: transparent;
   text-transform: uppercase;
   font-family: montserrat;
   font-weight: 300;
@@ -150,8 +156,12 @@ main aside .editButton {
   transition: all 0.2s;
   padding-block: 0.8rem;
 }
-main aside .editButton:hover {
-  text-decoration-color: transparent;
+main aside .buttons.bottom button:hover {
+  text-decoration-color: #b9b9b9;
+}
+main aside .buttons.bottom button i {
+  color: hsl(0, 0%, 55%);
+  margin-inline: 0.5rem;
 }
 
 /*---------- animals ----------*/
@@ -179,7 +189,7 @@ main .animals > .bottom {
   right: 0;
   height: 10vh;
   background: linear-gradient(0deg, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
-  pointer-events: hsl(0, 0%, 6%);
+  pointer-events: none;
 }
 
 main .animals .header .path {
@@ -201,26 +211,33 @@ main .animals .header .path span.thispage {
   color: hsl(0, 0%, 100%);
 }
 
-main .animals .header #add-animal {
+main .animals .header button {
   padding: 0.15rem 0.8rem;
-  border: 0.15rem solid hsl(43, 100%, 57%);
-  border-radius: 1rem;
   color: hsl(43, 100%, 57%);
   font-weight: 300;
   font-family: "Kanit", sans-serif;
   text-transform: uppercase;
   transition: all 0.2s;
 }
-main .animals .header #add-animal:hover {
+main .animals .header button.outlined {
+  border: 0.12rem solid hsl(43, 100%, 57%);
+  border-radius: 1rem;
+}
+main .animals .header button.outlined:hover {
+  /*
   font-weight: 500;
-  color: hsl(0, 0%, 6%);
+  */
+  color: black;
   background-color: hsl(43, 100%, 57%);
 }
 
 main .animals .content {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   overflow: auto;
+  padding-bottom: 10vh;
+  overflow: hidden;
 }
 main .animals .content::-webkit-scrollbar {
   display: none;
@@ -239,6 +256,8 @@ main .animals .content .animal {
   box-sizing: border-box;
   padding: 0.5rem;
   font-family: "montserrat", "sans-serif";
+  width: 100%;
+  overflow: hidden;
 }
 main .animals .content .animal h2 {
   font-size: 2rem;
@@ -246,6 +265,10 @@ main .animals .content .animal h2 {
   font-family: "Kanit", sans-serif;
   text-transform: uppercase;
   color: hsl(43, 100%, 57%);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  width: 100%;
 }
 main .animals .content .animal hr.accent {
   border-color: hsl(43, 100%, 57%);
@@ -301,6 +324,13 @@ main .animals .content .animal .top .imgbox {
   background-size: cover;
   background-position: center;
   border-radius: 0.5rem;
+}
+
+#editPopup {
+  position: absolute;
+  background-color: hsl(0, 0%, 15%);
+  padding: 0.5rem;
+  top: 0;
 }
 
 /*---------- login ----------*/

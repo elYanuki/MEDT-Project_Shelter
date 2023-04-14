@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="./style.css">
 	<script src='js/script.js' defer></script>
     <script src="js/popupEngine.js"></script>
+	<script src="https://kit.fontawesome.com/7796cb6c97.js" crossorigin="anonymous"></script>
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +25,7 @@
 	</nav>
 	<main>
 		<aside>
-			<div class="buttons">
+			<div class="buttons top">
 				<button class="selected">rooms</button>
 				<button>types</button>
 				<button>owners</button>
@@ -33,26 +34,24 @@
 			<hr>
 
 			<section class="content">
-				<ul>
-					<li>punkt</li>
-					<li>punkt</li>
-					<li>
-						<span>punkt</span>
-						<ul>
-							<li>unter</li>
-							<li>unter</li>
-							<li>unter</li>
-						</ul>
-					</li>
-					<li>punkt</li>
-				</ul>
+
 			</section>
-			<p class="editButton">edit shelter</p>
+			<div class="buttons bottom">
+				<button class="editButton">edit shelter<i class="fa-solid fa-pen-to-square"></i></button>
+				<button class="editButton">log out<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+			</div>
 		</aside>
 		<div class="animals">
 			<div class="header">
-                <p class="path"><span>all-animals</span> / <span>something</span> / <span class="thispage">hunde</span></p>
-				<button id="add-animal" onclick="addAnimal()">add-animal</button>
+                <p class="path"><span onclick="renderAnimals()">all-animals</span> / <span>hunde</span></p>
+				<div class="buttons">
+					<button class="">save changes</button>
+					<button class="outlined" id="add-animal" onclick="addAnimal()">add-animal</button>
+				</div>
+			</div>
+
+			<div id="editPopup">
+
 			</div>
 
 			<div class="content">
