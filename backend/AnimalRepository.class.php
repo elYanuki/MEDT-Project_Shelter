@@ -19,7 +19,7 @@ class AnimalRepository
     function insert($animal){
         try {
             $sql = "INSERT INTO animal (name, shelter_email, typeID, breedID, gender, acquiryDate, ownerID, roomID) 
-            VALUES ('{$animal->name}', '{$_SESSION['userEmail']}', '{$animal->typeID}', '0', '{$animal->gender}', now(), '0', '{$animal->roomID}')";
+            VALUES ('{$animal->name}', '{$_SESSION['userEmail']}', '{$animal->typeID}', '{$animal->breedID}', '{$animal->gender}', now(), '{$animal->ownerID}', '{$animal->roomID}')";
             return mysqli_query($this->connection, $sql);
         } catch (mysqli_sql_exception $err) {
             echo "SQL error occured: " . $err->getMessage();
@@ -46,7 +46,7 @@ from animal a
 
             $rows = array();
             while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
+                $rows[$row["ID"]] = $row;
             }
 
             return $rows;

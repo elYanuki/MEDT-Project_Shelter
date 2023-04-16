@@ -26,16 +26,15 @@
 	<main>
 		<aside>
 			<div class="buttons top">
-				<button class="selected">rooms</button>
-				<button>types</button>
-				<button>owners</button>
+				<button onclick="selectAside('roomID', this)">rooms</button>
+				<button onclick="selectAside('typeID', this)">types</button>
+				<button onclick="selectAside('ownerID', this)">owners</button>
 			</div>
 
 			<hr>
 
-			<section class="content">
+			<section class="content"></section>
 
-			</section>
 			<div class="buttons bottom">
 				<button class="editButton">edit shelter<i class="fa-solid fa-pen-to-square"></i></button>
 				<button class="editButton">log out<i class="fa-solid fa-arrow-right-from-bracket"></i></button>

@@ -7,6 +7,8 @@ $color-contrast: hsl(0, 0%, 100%);
 $gray-100: hsl(0, 0%, 6%);
 $gray-200: hsl(0, 0%, 12%);
 $gray-300: hsl(0, 0%, 15%);
+$gray-350: hsl(0, 0%, 20%);
+$gray-380: hsl(0, 0%, 30%);
 $gray-400: hsl(0, 0%, 40%);
 $gray-500: hsl(0, 0%, 50%);
 $gray-600: hsl(0, 0%, 60%);
@@ -65,7 +67,7 @@ hr{
 
 /*---------- nav ----------*/
 
-//region
+//region nav
 
 nav{
 	width: 100%;
@@ -87,7 +89,7 @@ nav{
 
 /*---------- aside ----------*/
 
-//region
+//region aside
 
 main aside{
 	width: fit-content;
@@ -105,6 +107,7 @@ main aside{
 
 main aside .buttons.top{
 	display: flex;
+	flex-wrap: wrap;
 	gap: 1vw;
 
 	button {
@@ -115,7 +118,6 @@ main aside .buttons.top{
 		display: block;
 		color: $gray-text;
 		transition: color .2s;
-
 		&:hover{
 			color: $gray-text-hover;
 		}
@@ -126,9 +128,24 @@ main aside .buttons.top{
 	}
 }
 
-
 main aside ul{
 	list-style-type: none;
+}
+
+main aside .content > ul{
+	opacity: 0;
+	height: 0;
+	overflow: hidden;
+
+	&.selected{
+		transition: opacity .5s;
+		height: auto;
+		opacity: 1;
+
+		li{
+			margin-bottom: 0;
+		}
+	}
 }
 
 main aside ul li{
@@ -142,9 +159,10 @@ main aside ul li{
 	margin-top: .3rem;
 	margin-left: 1.5rem;
 	position: relative;
-	transition: all .2s;
+	transition: font .2s, color .2s, margin-bottom .3s;
 	cursor: pointer;
 	user-select: none;
+	margin-bottom: -2rem;
 
 	&:hover{
 		color: $gray-text-hover;
@@ -167,8 +185,7 @@ main aside ul li{
 		rotate: 45deg;
 	}
 
-	&.selected{
-		font-weight: 300;
+	&.selected, &.selected span{
 		color: $color-contrast;
 
 		&::before{
@@ -212,14 +229,14 @@ main aside .buttons.bottom{
 
 /*---------- animals ----------*/
 
-//region
+//region animals
 
 main .animals{
 	width: auto;
 	height: 100%;
 	background-color: $gray-100;
 	flex-grow: 1;
-	padding: .5rem;
+	padding: 1rem;
 	box-sizing: border-box;
 	font-size: .9rem;
 	display: flex;
@@ -295,12 +312,12 @@ main .animals .content{
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 	&::-webkit-scrollbar{
 		display: none;
 	}
 	padding-bottom: 10vh;
-	overflow: hidden;
 
 	.column{
 		display: flex;
@@ -406,16 +423,41 @@ main .animals .content .animal{
 
 #editPopup{
 	position: absolute;
-	background-color: $gray-300;
-	padding: .5rem;
+	background-color: $gray-350;
+	border-radius: .3rem;
+	padding: .4rem;
 	top: 0;
+	display: none;
+	max-height: 30vh;
+	overflow-y: auto;
+	box-shadow: .2rem .2rem .4rem .2rem rgba(0, 0, 0, 0.4);
+	border: .1rem solid $gray-380;
+
+	&.active{
+		display: block;
+	}
+
+	p{
+		background-color: $gray-300;
+		padding: .2rem;
+		padding-right: .5rem;
+		border: .1rem solid $gray-300;
+		border-radius: .2rem;
+		margin-bottom: .2rem;
+		color: $gray-text-hover;
+		cursor: pointer;
+
+		&:hover{
+			border-color: $gray-text;
+		}
+	}
 }
 
 //endregion
 
 /*---------- login ----------*/
 
-//region
+//region login
 
 main.login{
 	/*TODO this is offset i think*/

@@ -79,6 +79,7 @@ main aside hr {
 
 main aside .buttons.top {
   display: flex;
+  flex-wrap: wrap;
   gap: 1vw;
 }
 main aside .buttons.top button {
@@ -101,6 +102,20 @@ main aside ul {
   list-style-type: none;
 }
 
+main aside .content > ul {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+main aside .content > ul.selected {
+  transition: opacity 0.5s;
+  height: auto;
+  opacity: 1;
+}
+main aside .content > ul.selected li {
+  margin-bottom: 0;
+}
+
 main aside ul li {
   text-transform: uppercase;
   font-size: 1.3rem;
@@ -110,9 +125,10 @@ main aside ul li {
   margin-top: 0.3rem;
   margin-left: 1.5rem;
   position: relative;
-  transition: all 0.2s;
+  transition: font 0.2s, color 0.2s, margin-bottom 0.3s;
   cursor: pointer;
   user-select: none;
+  margin-bottom: -2rem;
 }
 main aside ul li:hover {
   color: hsl(0, 0%, 80%);
@@ -132,11 +148,10 @@ main aside ul li:not(:has(ul))::before, main aside ul li span::before {
   width: 0.4rem;
   rotate: 45deg;
 }
-main aside ul li.selected {
-  font-weight: 300;
+main aside ul li.selected, main aside ul li.selected span {
   color: hsl(0, 0%, 100%);
 }
-main aside ul li.selected::before {
+main aside ul li.selected::before, main aside ul li.selected span::before {
   background-color: hsl(43, 100%, 57%);
 }
 
@@ -170,7 +185,7 @@ main .animals {
   height: 100%;
   background-color: hsl(0, 0%, 6%);
   flex-grow: 1;
-  padding: 0.5rem;
+  padding: 1rem;
   box-sizing: border-box;
   font-size: 0.9rem;
   display: flex;
@@ -235,9 +250,9 @@ main .animals .content {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 10vh;
-  overflow: hidden;
 }
 main .animals .content::-webkit-scrollbar {
   display: none;
@@ -328,9 +343,31 @@ main .animals .content .animal .top .imgbox {
 
 #editPopup {
   position: absolute;
-  background-color: hsl(0, 0%, 15%);
-  padding: 0.5rem;
+  background-color: hsl(0, 0%, 20%);
+  border-radius: 0.3rem;
+  padding: 0.4rem;
   top: 0;
+  display: none;
+  max-height: 30vh;
+  overflow-y: auto;
+  box-shadow: 0.2rem 0.2rem 0.4rem 0.2rem rgba(0, 0, 0, 0.4);
+  border: 0.1rem solid hsl(0, 0%, 30%);
+}
+#editPopup.active {
+  display: block;
+}
+#editPopup p {
+  background-color: hsl(0, 0%, 15%);
+  padding: 0.2rem;
+  padding-right: 0.5rem;
+  border: 0.1rem solid hsl(0, 0%, 15%);
+  border-radius: 0.2rem;
+  margin-bottom: 0.2rem;
+  color: hsl(0, 0%, 80%);
+  cursor: pointer;
+}
+#editPopup p:hover {
+  border-color: hsl(0, 0%, 55%);
 }
 
 /*---------- login ----------*/
