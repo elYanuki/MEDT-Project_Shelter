@@ -204,6 +204,7 @@ function editProperty(type, elem){
 
 function renderAside(){
     let html = generateSimpelAside("ownerID", filterData.ownerID)
+    console.log(filterData.ownerID)
     html += generateSimpelAside("roomID", filterData.roomID)
 
     let typeHtml = document.createElement("ul")
