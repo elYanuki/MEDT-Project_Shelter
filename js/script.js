@@ -309,6 +309,7 @@ function selectAside(sort, elem){
 function renderAside(){
     //todo add no owner / no room, (add button) - for owner
     let html = generateSimpelAside("ownerID", filterData.ownerID)
+    console.log(filterData.ownerID)
     html += generateSimpelAside("roomID", filterData.roomID)
 
     let typeHtml = document.createElement("ul")
