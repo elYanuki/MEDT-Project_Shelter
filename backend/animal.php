@@ -18,11 +18,16 @@ else
     $type = "problem";
 
 if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]) {
-    if($type == "getAllAnimals"){
-        $response->data = $animals->getAllAnimals();
-    }
-    if($type == "addAnimal"){
-        $animals->insert($postBody);
+    switch ($type){
+        case "getAllAnimals":
+            $response->data = $animals->getAllAnimals();
+            break;
+        case "addAnimal":
+            $animals->insert($postBody);
+            break;
+        case "updateAnimals":
+            $animals->update($postBody);
+            break;
     }
 }
 else {

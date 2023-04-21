@@ -26,6 +26,30 @@ class AnimalRepository
         }
     }
 
+    function update($animals){
+        try {
+            foreach ($animals as $item) {
+                $sql = "update animal set
+                            name = '{$item->name}',
+                            typeID = '{$item->typeID}',
+                            breedID = '{$item->breedID}',
+                            image = '{$item->image}',
+                            gender = '{$item->gender}',
+                            birthdate = '{$item->birthdate}',
+                            acquirydate = '{$item->acquiryDate}',
+                            ownerID = '{$item->ownerID}',
+                            roomID = '{$item->roomID}',
+                            note = '{$item->note}'
+                        where ID = '{$item->ID}';";
+                mysqli_query($this->connection, $sql);
+            }
+
+            return true;
+        } catch (mysqli_sql_exception $err) {
+            echo "SQL error occured: " . $err->getMessage();
+        }
+    }
+
     //getters & setters
     function getConnection()
     {

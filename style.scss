@@ -136,6 +136,11 @@ main aside .content > ul{
 	opacity: 0;
 	height: 0;
 	overflow: hidden;
+	overflow-y: auto;
+
+	&::-webkit-scrollbar{
+		display: none;
+	}
 
 	&.selected{
 		transition: opacity .5s;
@@ -192,11 +197,16 @@ main aside ul li{
 			background-color: $color-accent;
 		}
 	}
+
+	&.last{
+		margin-top: .8rem;
+	}
 }
 
 main aside .buttons.bottom{
 	margin-top: auto;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 
 	button{
@@ -349,6 +359,14 @@ main .animals .content .animal{
 		word-wrap: break-word;
 		hyphens: auto;
 		width: 100%;
+		transition: all .2s;
+
+		&:focus-visible{
+			outline: none;
+			background-color: $gray-350;
+			padding-left: .2rem;
+			box-shadow: 0 0 .1rem .1rem rgba(0, 0, 0, 0.5) inset;
+		}
 	}
 
 	hr.accent{
@@ -363,9 +381,9 @@ main .animals .content .animal{
 			text-decoration: none;
 		}
 		&.link{
-			text-decoration: underline;
+/*			text-decoration: underline;
 			text-underline-offset: .1rem;
-			text-decoration-color: $gray-text-hover;
+			text-decoration-color: $gray-text-hover;*/
 			cursor: pointer;
 			transition: all .2s;
 
@@ -380,6 +398,17 @@ main .animals .content .animal{
 		line-height: 130%;
 		&.note{
 			color: $gray-text;
+			transition: all .2s;
+			padding: .2rem;
+			padding-left: 0;
+
+			&:focus-visible{
+				outline: none;
+				background-color: $gray-350;
+				box-shadow: 0 0 .1rem .1rem rgba(0, 0, 0, 0.5) inset;
+				padding-left: .2rem;
+				color: $gray-text-hover;
+			}
 		}
 
 		&.subtext{
@@ -390,10 +419,6 @@ main .animals .content .animal{
 			outline: 1px solid $gray-text;
 			border: none;
 			border-radius: .2rem;
-		}
-
-		&[contenteditable="true"]{
-			padding: .1rem;
 		}
 	}
 

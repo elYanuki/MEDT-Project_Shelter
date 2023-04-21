@@ -21,6 +21,7 @@ function checkLogin(){
             else{
                 document.querySelector("nav h1").innerText = answer.name
                 shelterName = answer.name
+                getFilterData()
             }
         })
         .catch((error) => {
@@ -28,7 +29,6 @@ function checkLogin(){
         });
 }
 
-getFilterData()
 function getFilterData(){
     fetch(`./backend/user.php/getFilterData`)
         .then((response) => {
@@ -36,6 +36,8 @@ function getFilterData(){
         })
         .then(answer=>{
             filterData = answer.data
+            filterData["gender"] = {0: {name: "female", ID: 0}, 1: {name: "male", ID: 1}}
+            filterData["ownerID"][0] = {name: shelterName, ID: 0}
 
             renderAside()
             selectAside("roomID", document.querySelector('main aside .buttons.top button'))
@@ -54,7 +56,7 @@ function getAnimals(){
         .then(answer=>{
             animalData = answer.data || []
 
-            changeColumnSize(3)
+            checkScreenSize()
         })
         .catch((error) => {
             console.error("Error:", error);
@@ -78,7 +80,9 @@ function changeColumnSize(to){
     refreshAnimalRender()
 }
 
-window.addEventListener("resize", (event) => {
+window.addEventListener("resize", checkScreenSize);
+
+function checkScreenSize(){
     if(window.innerWidth < 600){
         changeColumnSize(1)
     }
@@ -88,7 +92,7 @@ window.addEventListener("resize", (event) => {
     else{
         changeColumnSize(3)
     }
-});
+}
 
 function addAnimal(){
     const data = {name: "animal", typeID: currentFilter.sort === "typeID" ? currentFilter.ID : 1, breedID: currentFilter.breed || 0, gender: 0, roomID: currentFilter.sort === "roomID" ? currentFilter.ID : 0, ownerID: currentFilter.sort === "ownerID" ? currentFilter.ID : 0};
@@ -121,18 +125,19 @@ function refreshAnimalRender(){
 
 indicators = {typeID: '<i class="fa-solid fa-paw"></i>', ownerID: '<i class="fa-solid fa-person"></i>', roomID: '<i class="fa-solid fa-house-chimney fa-sm"></i>'}
 function renderAnimals(sort, ID, breed){
-    //todo save changes to server on filter change so that joins will run and on column resize
+    updateServer()
+
     currentFilter = {sort: sort, ID: ID, breed: breed}
     let selectedName
     //set new path
     const path = document.querySelector(".animals .header .path")
     path.innerHTML = `<span onclick="renderAnimals()">all-animals</span>`
     if(sort) {
-        path.innerHTML += ` / <span onclick="${breed ? `renderAnimals('${sort}', ${ID})` : ''}">${indicators[sort]} ${filterData[sort][ID].name}</span>`
+        path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} ${filterData[sort][ID].name}</span>`
         selectedName = filterData[sort][ID].name
     }
     if(breed) {
-        path.innerHTML += ` / <span>${filterData.breedID[breed].name}</span>`
+        path.innerHTML += ` / <span onclick="refreshAnimalRender()">${filterData.breedID[breed].name}</span>`
         selectedName = filterData.breedID[breed].name
     }
     //highlight selected item in sidebar
@@ -170,7 +175,7 @@ function renderAnimal(data){
     let birthdateObject = new Date(data.birthdate)
 
     let processedData = {
-        gender: data.gender === 0 ? "male" : "female",
+        gender: filterData.gender[data.gender].name,
         age: data.birthdate ? Math.abs(new Date(Date.now() - birthdateObject.getTime()).getUTCFullYear() - 1970) : "unknown",
         note: data.note || "",
         owner: data.owner_name || shelterName
@@ -184,17 +189,15 @@ function renderAnimal(data){
         }
     })*/
 
-    console.log(data.breed_name)
-
     let animal =
         `<section class="animal" data-id="${data.ID}">
             <div class="top">
                 <div class="left">
-                    <h2 contenteditable="true">${data.name}</h2>
+                    <h2 contenteditable="true" onblur="editProperty('name', this)">${data.name}</h2>
                     <p class="subtext">
-                        <span class="link" onclick="editProperty('typeID', this)">${data.type_name}</span> • 
-                        <span class="link breed" onclick="editProperty('breedID', this)">${data.breed_name || "unknown"}</span> • 
-                        <span class="link" onclick="editProperty('gender', this)">${processedData.gender}</span>
+                        <span class="link" onclick="editPropertyDropdown('typeID', this)">${data.type_name}</span> • 
+                        <span class="link breed" onclick="editPropertyDropdown('breedID', this)">${data.breed_name || "unknown"}</span> • 
+                        <span class="link" onclick="editPropertyDropdown('gender', this)">${processedData.gender}</span>
                     </p>
                     <hr class="accent">
                 </div>
@@ -205,7 +208,7 @@ function renderAnimal(data){
                 <p class="birthdate">
                 <span class="label">birthdate</span>${data.birthdate || "unknown"}
                 <span class="label"> • age</span>${processedData.age}</p>
-                <p class="room"><span class="label">ROOM</span><span class="link">${data.room_name}</span></p>
+                <p class="room"><span class="label">ROOM</span><span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span></p>
                 <br>
                 <p class="food">
                     <span class="label">menu</span>${data.menu || "unkown"}
@@ -213,11 +216,11 @@ function renderAnimal(data){
                 </p>
                 <br>
                 <p class="owner">
-                    <span class="label">OWNER</span><span class="link">${data.owner_name}</span>
+                    <span class="label">OWNER</span><span class="link" onclick="editPropertyDropdown('ownerID', this)">${processedData.owner}</span>
                     <span class="label"> • Since</span>${data.acquiryDate}
                 </p>
                 <hr>
-                <p class="note" contenteditable="true" spellcheck="false">${processedData.note}</p>
+                <p class="note" contenteditable="true" spellcheck="false" onblur="editProperty('note', this)">${processedData.note}</p>
             </div>
         </section>`
 
@@ -235,7 +238,7 @@ let clickedElem
 let editingAnimalID
 let editingProperty
 let currentAnimal
-function editProperty(prop, elem){
+function editPropertyDropdown(prop, elem){
     clickedElem = elem
     editingAnimalID = elem.closest(".animal").dataset.id
     editingProperty = prop
@@ -250,50 +253,86 @@ function editProperty(prop, elem){
     //create content
     let html = ""
 
-    if(prop === "breedID") {
-        Object.entries(filterData['breedID']).forEach(item => {
-            const [key, value] = item;
-            if(value.animal_type_ID === currentAnimal.typeID)
-                html += `<p onclick="confirmEdit('${prop}', '${value.ID}')">${value.name}</p>`
-        })
-    }
-    else{
-        Object.entries(filterData[prop]).forEach(item => {
-            const [key, value] = item;
-            html += `<p onclick="confirmEdit('${prop}', '${value.ID}')">${value.name}</p>`
-        })
+    switch (prop) {
+        case "breedID":
+            Object.entries(filterData['breedID']).forEach(item => {
+                const [key, value] = item;
+                if(value.animal_type_ID === currentAnimal.typeID)
+                    html += `<p onclick="confirmPropertyDropdown('breedID', '${value.ID}')">${value.name}</p>`
+            })
+            break
+        default:
+            Object.entries(filterData[prop]).forEach(item => {
+                const [key, value] = item;
+                html += `<p onclick="confirmPropertyDropdown('${prop}', '${value.ID}')">${value.name}</p>`
+            })
+            break
     }
 
     editPopup.innerHTML = html
 
-    document.body.addEventListener('click', closeEditProperty);
+    document.body.addEventListener('click', closePropertyDropdown);
 }
 
-function confirmEdit(type, ID){
+function confirmPropertyDropdown(prop, ID){
     editPopup.classList.remove("active")
 
-    document.body.removeEventListener('click', closeEditProperty);
+    document.body.removeEventListener('click', closePropertyDropdown);
 
-    if(!type) return
+    if(!prop) return
 
-    clickedElem.innerText = filterData[type][ID].name
+    clickedElem.innerText = filterData[prop][ID].name
 
     let animalHtml = clickedElem.closest(".animal")
-    if(type === 'typeID' && currentAnimal[type] !== ID){
-        currentAnimal['breedID'] = undefined
+    if(prop === 'typeID' && currentAnimal[prop] !== ID){
+        currentAnimal['breedID'] = null
         animalHtml.querySelector('.breed').innerText = "unknown"
     }
 
-    currentAnimal[type] = ID
+    currentAnimal[prop] = ID
 
     editedAnimals[editingAnimalID] = currentAnimal
 }
 
-function closeEditProperty(event){
+function closePropertyDropdown(event){
     if(!editPopup.contains(event.target) && !clickedElem.contains(event.target)) {
-        confirmEdit()
+        confirmPropertyDropdown()
     }
 }
+
+function editProperty(prop, elem){
+    editingAnimalID = elem.closest(".animal").dataset.id
+    currentAnimal = editedAnimals[editingAnimalID] || animalData[editingAnimalID]
+
+    if(elem.innerHTML === "")return
+
+    currentAnimal[prop] = elem.innerHTML
+    editedAnimals[editingAnimalID] = currentAnimal
+}
+
+function updateServer(){
+    if(Object.keys(editedAnimals).length === 0) return
+    fetch("./backend/animal.php/updateAnimals", {
+        method: "POST", // or 'PUT'
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedAnimals),
+    })
+        .then((response) => {
+            return response.text()
+        })
+        .then((answer) => {
+            console.log(answer)
+            getAnimals()
+            editedAnimals = {}
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+}
+
+setInterval(updateServer, 5000)
 
 function selectAside(sort, elem){
     document.querySelectorAll(`main aside .content ul.selected`).forEach((item)=>{
@@ -306,11 +345,25 @@ function selectAside(sort, elem){
     })
     elem.classList.add("selected")
 }
+
 function renderAside(){
     //todo add no owner / no room, (add button) - for owner
-    let html = generateSimpelAside("ownerID", filterData.ownerID)
-    console.log(filterData.ownerID)
-    html += generateSimpelAside("roomID", filterData.roomID)
+    let html = ""
+
+    let items = ""
+    Object.entries(filterData.ownerID).forEach(item => {
+        const [key, value] = item;
+        if(value.ID !== 0)
+            items += `<li onclick="renderAnimals('ownerID', ${value.ID})">${value.name}</li>`
+    })
+    html += `<ul class="ownerID">${items}<li class="last" onclick="renderAnimals('ownerID', ${filterData.ownerID[0].ID})">${filterData.ownerID[0].name}</li></ul>`
+
+    items = ""
+    Object.entries(filterData.roomID).forEach(item => {
+        const [key, value] = item;
+        items += `<li onclick="renderAnimals('roomID', ${value.ID})">${value.name}</li>`
+    })
+    html += `<ul class="roomID">${items}</ul>`
 
     let typeHtml = document.createElement("ul")
     typeHtml.classList.add("typeID")
@@ -333,14 +386,4 @@ function renderAside(){
 
     document.querySelector("main aside .content").innerHTML = html
     document.querySelector("main aside .content").appendChild(typeHtml)
-}
-
-function generateSimpelAside(name, data){
-    let items = ""
-    Object.entries(data).forEach(item => {
-        const [key, value] = item;
-        items += `<li onclick="renderAnimals('${name}', ${value.ID})">${value.name}</li>`
-    })
-
-   return `<ul class="${name}">${items}</ul>`
 }
