@@ -22,6 +22,7 @@ $gray-text-hover: hsl(0, 0%, 80%);
 	padding: 0;
 	font: inherit;
 	accent-color: $color-accent;
+	color-scheme: dark;
 }
 
 img{
@@ -273,6 +274,12 @@ main .animals{
 		background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
 		pointer-events: none;
 	}
+
+	#datePick{
+		visibility: hidden;
+		height: 0;
+		width: 0;
+	}
 }
 
 main .animals .header .path{
@@ -462,9 +469,9 @@ main .animals .content .animal{
 	overflow-y: auto;
 	box-shadow: .2rem .2rem .4rem .2rem rgba(0, 0, 0, 0.4);
 	border: .1rem solid $gray-380;
-
+	align-items: center;
 	&.active{
-		display: block;
+		display: flex;
 	}
 
 	p{
@@ -480,6 +487,11 @@ main .animals .content .animal{
 		&:hover{
 			border-color: $gray-text;
 		}
+	}
+
+	i{
+		font-size: 1.5rem;
+		margin-left: .5rem;
 	}
 }
 
