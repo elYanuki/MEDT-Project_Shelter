@@ -403,8 +403,31 @@ main .animals .content .animal .top .imgbox {
   border-color: hsl(0, 0%, 55%);
 }
 #editPopup i {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-left: 0.5rem;
+}
+
+#datepicker {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  z-index: 9999;
+  background-color: black;
+  border: 1px solid gray;
+  width: fit-content;
+}
+#datepicker table {
+  border-collapse: collapse;
+}
+#datepicker th {
+  font-weight: bold;
+  text-align: center;
+}
+#datepicker td {
+  text-align: center;
+}
+#datepicker tr {
+  width: fit-content;
 }
 
 /*---------- login ----------*/

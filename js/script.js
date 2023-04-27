@@ -264,7 +264,7 @@ function editPropertyDropdown(prop, elem){
             break
         case "birthdate":
         case "acquirydate":
-            html = `<i class="fa-regular fa-circle-check"></i>`
+            html = `<i class="fa-solid fa-check"></i>`
             let datePick = document.createElement("input")
             datePick.type = "date"
             editPopup.appendChild(datePick)

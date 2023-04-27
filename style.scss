@@ -490,8 +490,35 @@ main .animals .content .animal{
 	}
 
 	i{
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 		margin-left: .5rem;
+	}
+}
+
+#datepicker {
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	z-index: 9999;
+	background-color: black;
+	border: 1px solid gray;
+	width: fit-content;
+
+	table {
+		border-collapse: collapse;
+	}
+
+	th {
+		font-weight: bold;
+		text-align: center;
+	}
+
+	td {
+		text-align: center;
+	}
+
+	tr{
+		width: fit-content;
 	}
 }
 
