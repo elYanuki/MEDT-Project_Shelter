@@ -206,7 +206,7 @@ function renderAnimal(data){
 
             <div class="bottom">
                 <p class="birthdate">
-                <span class="label">birthdate</span>${data.birthdate || "unknown"}
+                <span class="label">birthdate</span><span class="link" onclick="editDateDropdown('birthdate', this)">${data.birthdate || "unknown"}</span>
                 <span class="label"> • age</span>${processedData.age}</p>
                 <p class="room"><span class="label">ROOM</span><span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span></p>
                 <br>
@@ -298,6 +298,10 @@ function closePropertyDropdown(event){
     if(!editPopup.contains(event.target) && !clickedElem.contains(event.target)) {
         confirmPropertyDropdown()
     }
+}
+
+function editDateDropdown(prop, elem){
+
 }
 
 function editProperty(prop, elem){

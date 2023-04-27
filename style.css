@@ -161,6 +161,10 @@ main aside ul li.selected::before, main aside ul li.selected span::before {
 main aside ul li.last {
   margin-top: 0.8rem;
 }
+main aside ul li.last::before {
+  border-radius: 50%;
+  width: 0.5rem;
+}
 
 main aside .buttons.bottom {
   margin-top: auto;
