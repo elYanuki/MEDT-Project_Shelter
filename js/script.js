@@ -206,7 +206,7 @@ function renderAnimal(data){
 
             <div class="bottom">
                 <p class="birthdate">
-                <span class="label">birthdate</span><span class="link" onclick="editDateDropdown('birthdate', this)">${data.birthdate || "unknown"}</span>
+                <span class="label">birthdate</span><span class="link" onclick="editPropertyDropdown('birthdate', this)">${data.birthdate || "unknown"}</span>
                 <span class="label"> • age</span>${processedData.age}</p>
                 <p class="room"><span class="label">ROOM</span><span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span></p>
                 <br>
@@ -253,6 +253,7 @@ function editPropertyDropdown(prop, elem){
     //create content
     let html = ""
 
+    editPopup.innerHTML = ""
     switch (prop) {
         case "breedID":
             Object.entries(filterData['breedID']).forEach(item => {
@@ -260,6 +261,13 @@ function editPropertyDropdown(prop, elem){
                 if(value.animal_type_ID === currentAnimal.typeID)
                     html += `<p onclick="confirmPropertyDropdown('breedID', '${value.ID}')">${value.name}</p>`
             })
+            break
+        case "birthdate":
+        case "acquirydate":
+            html = `<i class="fa-regular fa-circle-check"></i>`
+            let datePick = document.createElement("input")
+            datePick.type = "date"
+            editPopup.appendChild(datePick)
             break
         default:
             Object.entries(filterData[prop]).forEach(item => {
@@ -269,7 +277,7 @@ function editPropertyDropdown(prop, elem){
             break
     }
 
-    editPopup.innerHTML = html
+    editPopup.innerHTML += html
 
     document.body.addEventListener('click', closePropertyDropdown);
 }
@@ -301,7 +309,7 @@ function closePropertyDropdown(event){
 }
 
 function editDateDropdown(prop, elem){
-
+    document.querySelector('#datePick').showPicker()
 }
 
 function editProperty(prop, elem){
