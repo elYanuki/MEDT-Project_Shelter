@@ -66,6 +66,10 @@ hr{
 	margin-block: .5rem;
 }
 
+.popupEngineNotification{
+	border: 1px solid $gray-text;
+}
+
 /*---------- nav ----------*/
 
 //region nav
@@ -469,56 +473,34 @@ main .animals .content .animal{
 	overflow-y: auto;
 	box-shadow: .2rem .2rem .4rem .2rem rgba(0, 0, 0, 0.4);
 	border: .1rem solid $gray-380;
-	align-items: center;
+	align-items: flex-start;
+	row-gap: .3rem;
+	column-gap: .5rem;
+
 	&.active{
-		display: flex;
+		display: grid;
 	}
 
-	p{
+	p, input, .confirm{
 		background-color: $gray-300;
 		padding: .2rem;
 		padding-right: .5rem;
 		border: .1rem solid $gray-300;
 		border-radius: .2rem;
-		margin-bottom: .2rem;
 		color: $gray-text-hover;
 		cursor: pointer;
+		box-sizing: border-box;
 
 		&:hover{
 			border-color: $gray-text;
 		}
 	}
 
-	i{
-		font-size: 1.2rem;
-		margin-left: .5rem;
-	}
-}
-
-#datepicker {
-	position: absolute;
-	top: 100px;
-	left: 100px;
-	z-index: 9999;
-	background-color: black;
-	border: 1px solid gray;
-	width: fit-content;
-
-	table {
-		border-collapse: collapse;
-	}
-
-	th {
-		font-weight: bold;
-		text-align: center;
-	}
-
-	td {
-		text-align: center;
-	}
-
-	tr{
-		width: fit-content;
+	.confirm{
+		display: grid;
+		place-items: center;
+		aspect-ratio: 1;
+		height: 100%;
 	}
 }
 

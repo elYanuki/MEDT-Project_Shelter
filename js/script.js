@@ -7,7 +7,7 @@ let editedAnimals = {}
 
 checkLogin()
 
-PopupEngine.init({backgroundColor: "hsl(0, 0%, 12%)", textColor: "hsl(0, 0%, 100%)", elemBackground: "hsl(0, 0%, 8%)"})
+PopupEngine.init({backgroundColor: "hsl(0, 0%, 12%)", textColor: "hsl(0, 0%, 100%)", elemBackground: "hsl(0, 0%, 8%)", defaultNotificationLifetime: 2000},)
 
 function checkLogin(){
     fetch(`./backend/user.php/`)
@@ -117,6 +117,8 @@ function addAnimal(){
         .catch((error) => {
             console.error(`Error:`, error);
         });
+
+    PopupEngine.createNotification({text: "created new animal", position: ["bottom", "right"]})
 }
 
 function refreshAnimalRender(){
@@ -173,13 +175,16 @@ function renderAnimals(sort, ID, breed){
  */
 function renderAnimal(data){
     let birthdateObject = new Date(data.birthdate)
+    let isValidDateFormat = /^\d{4}-\d{2}-\d{2}$/
 
     let processedData = {
         gender: filterData.gender[data.gender].name,
-        age: data.birthdate ? Math.abs(new Date(Date.now() - birthdateObject.getTime()).getUTCFullYear() - 1970) : "unknown",
+        age: isValidDateFormat.test(data.birthdate) ? new Date().getFullYear() - birthdateObject.getFullYear() : "unknown",
         note: data.note || "",
         owner: data.owner_name || shelterName
     }
+
+    console.log(data.name, data.birthdate, processedData.age)
 
     let feedTimeString = ""
     /*data.feedTimes.forEach((item)=>{
@@ -207,7 +212,7 @@ function renderAnimal(data){
             <div class="bottom">
                 <p class="birthdate">
                 <span class="label">birthdate</span><span class="link" onclick="editPropertyDropdown('birthdate', this)">${data.birthdate || "unknown"}</span>
-                <span class="label"> • age</span>${processedData.age}</p>
+                <span class="label"> • age</span><span class="age">${processedData.age}</span></p>
                 <p class="room"><span class="label">ROOM</span><span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span></p>
                 <br>
                 <p class="food">
@@ -254,6 +259,7 @@ function editPropertyDropdown(prop, elem){
     let html = ""
 
     editPopup.innerHTML = ""
+    editPopup.style.gridTemplateColumns = "auto"
     switch (prop) {
         case "breedID":
             Object.entries(filterData['breedID']).forEach(item => {
@@ -264,9 +270,11 @@ function editPropertyDropdown(prop, elem){
             break
         case "birthdate":
         case "acquirydate":
-            html = `<i class="fa-solid fa-check"></i>`
             let datePick = document.createElement("input")
+            html = `<div class="confirm"><i class="fa-solid fa-check" onclick="confirmPropertyDropdown('${prop}')"></i></div>`
             datePick.type = "date"
+            datePick.id = "datepicker"
+            editPopup.style.gridTemplateColumns = "auto auto"
             editPopup.appendChild(datePick)
             break
         default:
@@ -289,15 +297,23 @@ function confirmPropertyDropdown(prop, ID){
 
     if(!prop) return
 
-    clickedElem.innerText = filterData[prop][ID].name
-
     let animalHtml = clickedElem.closest(".animal")
     if(prop === 'typeID' && currentAnimal[prop] !== ID){
         currentAnimal['breedID'] = null
         animalHtml.querySelector('.breed').innerText = "unknown"
     }
 
-    currentAnimal[prop] = ID
+    if(!ID){
+        clickedElem.innerText = document.querySelector("#datepicker").value
+        currentAnimal[prop] = document.querySelector("#datepicker").value
+        currentAnimal.age = new Date().getFullYear() - new Date(currentAnimal.birthdate).getFullYear()
+        console.log(clickedElem)
+        clickedElem.closest(".animal").querySelector(".age").innerText = currentAnimal.age
+    }
+    else{
+        clickedElem.innerText = filterData[prop][ID].name
+        currentAnimal[prop] = ID
+    }
 
     editedAnimals[editingAnimalID] = currentAnimal
 }
