@@ -66,6 +66,7 @@ nav h1 {
   margin-block: auto;
   text-transform: uppercase;
   font-family: "Kanit", sans-serif;
+  line-height: 100%;
 }
 
 /*---------- aside ----------*/
@@ -337,18 +338,25 @@ main .animals .content .animal span.link:hover {
 main .animals .content .animal p {
   line-height: 130%;
 }
-main .animals .content .animal p.note {
+main .animals .content .animal p.note, main .animals .content .animal p.food {
   color: hsl(0, 0%, 55%);
   transition: all 0.2s;
   padding: 0.2rem;
   padding-left: 0;
 }
-main .animals .content .animal p.note:focus-visible {
+main .animals .content .animal p.note:focus-visible, main .animals .content .animal p.food:focus-visible {
   outline: none;
   background-color: hsl(0, 0%, 20%);
   box-shadow: 0 0 0.1rem 0.1rem rgba(0, 0, 0, 0.5) inset;
   padding-left: 0.2rem;
   color: hsl(0, 0%, 80%);
+}
+main .animals .content .animal p.food {
+  color: hsl(0, 0%, 100%);
+  background-color: hsl(0, 0%, 15%);
+}
+main .animals .content .animal p.food:focus-visible {
+  color: hsl(0, 0%, 100%);
 }
 main .animals .content .animal p.subtext {
   font-weight: 300;

@@ -87,6 +87,7 @@ nav{
 		margin-block: auto;
 		text-transform: uppercase;
 		font-family: "Kanit", sans-serif;
+		line-height: 100%;
 	}
 }
 
@@ -412,7 +413,7 @@ main .animals .content .animal{
 
 	p{
 		line-height: 130%;
-		&.note{
+		&.note, &.food{
 			color: $gray-text;
 			transition: all .2s;
 			padding: .2rem;
@@ -424,6 +425,15 @@ main .animals .content .animal{
 				box-shadow: 0 0 .1rem .1rem rgba(0, 0, 0, 0.5) inset;
 				padding-left: .2rem;
 				color: $gray-text-hover;
+			}
+		}
+
+		&.food{
+			color: $color-contrast;
+			background-color: $gray-300;
+
+			&:focus-visible{
+				color: $color-contrast;
 			}
 		}
 

@@ -39,7 +39,8 @@ class AnimalRepository
                             acquirydate = '{$item->acquiryDate}',
                             ownerID = '{$item->ownerID}',
                             roomID = '{$item->roomID}',
-                            note = '{$item->note}'
+                            note = '{$item->note}',
+                            food = '{$item->food}'
                         where ID = '{$item->ID}';";
                 mysqli_query($this->connection, $sql);
             }
@@ -58,7 +59,7 @@ class AnimalRepository
 
     function getAllAnimals(){
         $sql = "
-        select a.ID, a.name, a.note, a.typeID, a.breedID, a.image, a.gender, a.birthdate, a.acquiryDate, a.ownerID, a.roomID, a.foodType, a.foodTime, at.name as type_name, ab.name as breed_name, o.name as owner_name, r.name as room_name
+        select a.ID, a.name, a.note, a.typeID, a.breedID, a.image, a.gender, a.birthdate, a.acquiryDate, a.ownerID, a.roomID, a.food, at.name as type_name, ab.name as breed_name, o.name as owner_name, r.name as room_name
 from animal a
          left outer join animal_type at on a.typeID = at.ID
          left outer join animal_breed ab on a.breedID = ab.ID

@@ -125,47 +125,54 @@ function refreshAnimalRender(){
     renderAnimals(currentFilter.sort, currentFilter.ID, currentFilter.breed)
 }
 
-indicators = {typeID: '<i class="fa-solid fa-paw"></i>', ownerID: '<i class="fa-solid fa-person"></i>', roomID: '<i class="fa-solid fa-house-chimney fa-sm"></i>'}
-function renderAnimals(sort, ID, breed){
+indicators = {
+    typeID: '<i class="fa-solid fa-paw"></i>',
+    ownerID: '<i class="fa-solid fa-person"></i>',
+    roomID: '<i class="fa-solid fa-house-chimney fa-sm"></i>'
+}
+
+function renderAnimals(sort, ID, breed) {
     updateServer()
+    getAnimals().then(() => {
 
-    currentFilter = {sort: sort, ID: ID, breed: breed}
-    let selectedName
-    //set new path
-    const path = document.querySelector(".animals .header .path")
-    path.innerHTML = `<span onclick="renderAnimals()">all-animals</span>`
-    if(sort) {
-        path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} ${filterData[sort][ID].name}</span>`
-        selectedName = filterData[sort][ID].name
-    }
-    if(breed) {
-        path.innerHTML += ` / <span onclick="refreshAnimalRender()">${filterData.breedID[breed].name}</span>`
-        selectedName = filterData.breedID[breed].name
-    }
-    //highlight selected item in sidebar
-    document.querySelectorAll("aside .content li.selected")?.forEach((item) => {
-        item.classList.remove("selected")
-    })
-
-    if(selectedName) {
-        document.querySelectorAll(`aside .content .${sort} li`).forEach((item) => {
-            if (item.innerHTML === selectedName || item.querySelector("span")?.innerHTML === selectedName) {
-                item.classList.add("selected")
-            }
+        currentFilter = {sort: sort, ID: ID, breed: breed}
+        let selectedName
+        //set new path
+        const path = document.querySelector(".animals .header .path")
+        path.innerHTML = `<span onclick="renderAnimals()">all-animals</span>`
+        if (sort) {
+            path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} ${filterData[sort][ID].name}</span>`
+            selectedName = filterData[sort][ID].name
+        }
+        if (breed) {
+            path.innerHTML += ` / <span onclick="refreshAnimalRender()">${filterData.breedID[breed].name}</span>`
+            selectedName = filterData.breedID[breed].name
+        }
+        //highlight selected item in sidebar
+        document.querySelectorAll("aside .content li.selected")?.forEach((item) => {
+            item.classList.remove("selected")
         })
-    }
 
-    //render all animals that are in the filter
-    document.querySelectorAll(".animals .content .column").forEach((elem) => {
-        elem.innerHTML = ""
-    })
+        if (selectedName) {
+            document.querySelectorAll(`aside .content .${sort} li`).forEach((item) => {
+                if (item.innerHTML === selectedName || item.querySelector("span")?.innerHTML === selectedName) {
+                    item.classList.add("selected")
+                }
+            })
+        }
 
-    Object.entries(animalData).forEach((item)=>{
-        const [key, animal] = item;
-        if(sort && parseInt(animal[sort]) !== ID) return
-        if(breed && (parseInt(animal.breedID) !== breed || !animal.breedID)) return
+        //render all animals that are in the filter
+        document.querySelectorAll(".animals .content .column").forEach((elem) => {
+            elem.innerHTML = ""
+        })
 
-        renderAnimal(animal);
+        Object.entries(animalData).forEach((item) => {
+            const [key, animal] = item;
+            if (sort && parseInt(animal[sort]) !== ID) return
+            if (breed && (parseInt(animal.breedID) !== breed || !animal.breedID)) return
+
+            renderAnimal(animal);
+        })
     })
 }
 
@@ -179,9 +186,11 @@ function renderAnimal(data){
 
     let processedData = {
         gender: filterData.gender[data.gender].name,
-        age: isValidDateFormat.test(data.birthdate) ? new Date().getFullYear() - birthdateObject.getFullYear() : "unknown",
+        age: data.birthdate === "0000-00-00" ? "unknown" : new Date().getFullYear() - birthdateObject.getFullYear(),
         note: data.note || "",
-        owner: data.owner_name || shelterName
+        food: data.food || "",
+        owner: data.owner_name || shelterName,
+        birthdate: data.birthdate === "0000-00-00" ? "unknown" : data.birthdate
     }
 
     console.log(data.name, data.birthdate, processedData.age)
@@ -211,18 +220,21 @@ function renderAnimal(data){
 
             <div class="bottom">
                 <p class="birthdate">
-                <span class="label">birthdate</span><span class="link" onclick="editPropertyDropdown('birthdate', this)">${data.birthdate || "unknown"}</span>
-                <span class="label"> • age</span><span class="age">${processedData.age}</span></p>
-                <p class="room"><span class="label">ROOM</span><span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span></p>
+                <span class="label">birthdate</span><span class="link" onclick="editPropertyDropdown('birthdate', this)">${processedData.birthdate}</span>
+                <span class="label"> • age</span><span data-popup-text="this property is auto calculated" class="age">${processedData.age}</span></p>
+                <p class="room">
+                    <span class="label">ROOM</span>
+                    <span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span>
+                </p>
                 <br>
-                <p class="food">
-                    <span class="label">menu</span>${data.menu || "unkown"}
-                    <br><span class="label">feedtimes</span>${feedTimeString}
+                <p>
+                    <span class="label">menu</span>
+                    <p class="food" contenteditable="true" spellcheck="false" onblur="editProperty('food', this)">${processedData.food}</p>
                 </p>
                 <br>
                 <p class="owner">
                     <span class="label">OWNER</span><span class="link" onclick="editPropertyDropdown('ownerID', this)">${processedData.owner}</span>
-                    <span class="label"> • Since</span>${data.acquiryDate}
+                    <span class="label"> • Since</span><span class="link" onclick="editPropertyDropdown('acquirydate', this)">${data.acquiryDate}</span>
                 </p>
                 <hr>
                 <p class="note" contenteditable="true" spellcheck="false" onblur="editProperty('note', this)">${processedData.note}</p>
@@ -290,6 +302,11 @@ function editPropertyDropdown(prop, elem){
     document.body.addEventListener('click', closePropertyDropdown);
 }
 
+/**
+ * closes the edit popup and sets the values
+ * @param prop property to be set - type, name, etc.
+ * @param ID new value ID of the property
+ */
 function confirmPropertyDropdown(prop, ID){
     editPopup.classList.remove("active")
 
@@ -303,12 +320,11 @@ function confirmPropertyDropdown(prop, ID){
         animalHtml.querySelector('.breed').innerText = "unknown"
     }
 
-    if(!ID){
+    if(["acquirydate", "birthdate"].includes(prop)){
         clickedElem.innerText = document.querySelector("#datepicker").value
         currentAnimal[prop] = document.querySelector("#datepicker").value
         currentAnimal.age = new Date().getFullYear() - new Date(currentAnimal.birthdate).getFullYear()
-        console.log(clickedElem)
-        clickedElem.closest(".animal").querySelector(".age").innerText = currentAnimal.age
+        animalHtml.querySelector(".age").innerText = currentAnimal.age
     }
     else{
         clickedElem.innerText = filterData[prop][ID].name
@@ -352,7 +368,6 @@ function updateServer(){
         })
         .then((answer) => {
             console.log(answer)
-            getAnimals()
             editedAnimals = {}
         })
         .catch((error) => {
@@ -391,7 +406,10 @@ function renderAside(){
         const [key, value] = item;
         items += `<li onclick="renderAnimals('roomID', ${value.ID})">${value.name}</li>`
     })
-    html += `<ul class="roomID">${items}</ul>`
+    html += `<ul class="roomID">
+                ${items}
+                <li class="last" onclick="renderAnimals('roomID', ${filterData.ownerID[0].ID})">${filterData.ownerID[0].name}</li>
+            </ul>`
 
     let typeHtml = document.createElement("ul")
     typeHtml.classList.add("typeID")
