@@ -128,6 +128,45 @@ function addAnimal(){
     PopupEngine.createNotification({text: "created new animal", position: ["bottom", "right"]})
 }
 
+function deleteAnimal(id, name){
+    PopupEngine.createModal({
+        heading: "Are you sure?",
+        text: "This will permamently delete the animal: " + name,
+        buttons: [
+            {
+                text: "okay",
+                action: () => {
+                    fetch("./backend/animal.php/deleteAnimal", {
+                        method: "POST", // or 'PUT'
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ID:id}),
+                    })
+                    .then((response) => {
+                        console.log(response.text())
+                    })
+                    .then((data) => {
+                        return getAnimals()
+                    })
+                    .then((data) => {
+                        refreshAnimalRender()
+                    })
+                    .catch((error) => {
+                        console.error(`Error:`, error);
+                    });
+                },
+                closePopup: true
+            },
+            {
+                text: "cancel",
+            },
+        ]
+    }).then((data)=>{
+        console.log("continuing with data name:", data.inputValues[0], "age: ", data.inputValues[1])
+    })
+}
+
 function refreshAnimalRender(){
     renderAnimals(currentFilter.sort, currentFilter.ID, currentFilter.breed)
 }
@@ -206,17 +245,10 @@ function renderAnimal(data){
         note: data.note || "",
         food: data.food || "",
         owner: data.owner_name || shelterName,
+        image: data.image == null || data.image == "" ? "./img/animal-default.png" : data.image
     }
 
     console.log(data.name, data.birthdate, processedData.age)
-
-    let feedTimeString = ""
-    /*data.feedTimes.forEach((item)=>{
-        feedTimeString += item
-        if(item !== data.feedTimes.at(-1)){
-            feedTimeString += " • "
-        }
-    })*/
 
     let animal =
         `<section class="animal" data-id="${data.ID}">
@@ -230,8 +262,8 @@ function renderAnimal(data){
                     </p>
                     <hr class="accent">
                 </div>
-                <div class="imgbox" style="background-image: ${data.image}">
-                    <i class="fa-solid fa-pen-to-square"></i>
+                <div class="imgbox" style="background-image: url('${processedData.image}')">
+                    <i class="fa-solid fa-pen-to-square" onclick="editPropertyDropdown('image', this)"></i>
                 </div>
             </div>
 
@@ -255,6 +287,7 @@ function renderAnimal(data){
                 </p>
                 <hr>
                 <p class="note" contenteditable="true" spellcheck="false" onblur="editProperty('note', this)">${processedData.note}</p>
+                <i onclick="deleteAnimal(${data.ID}, '${data.name}')" class="fa-solid fa-trash"></i>
             </div>
         </section>`
 
@@ -278,12 +311,6 @@ function editPropertyDropdown(prop, elem){
     editingProperty = prop
     currentAnimal = editedAnimals[editingAnimalID] || animalData[editingAnimalID]
 
-    //position popup
-    let rect = elem.getBoundingClientRect()
-    editPopup.style.top = rect.top - document.querySelector("nav").clientHeight + rect.height + "px"
-    editPopup.style.left = rect.left - document.querySelector("aside").clientWidth + "px"
-    editPopup.classList.add("active")
-
     //create content
     let html = ""
 
@@ -306,6 +333,15 @@ function editPropertyDropdown(prop, elem){
             editPopup.style.gridTemplateColumns = "auto auto"
             editPopup.appendChild(datePick)
             break
+        case "image":
+            let imagePick = document.createElement("input")
+            html = `<div class="confirm"><i class="fa-solid fa-check" onclick="confirmPropertyDropdown('${prop}')"></i></div>`
+            imagePick.type = "file"
+            imagePick.name = "files[]"
+            imagePick.id = "imagepicker"
+            editPopup.style.gridTemplateColumns = "auto auto"
+            editPopup.appendChild(imagePick)
+            break
         default:
             Object.entries(filterData[prop]).forEach(item => {
                 const [key, value] = item;
@@ -315,6 +351,18 @@ function editPropertyDropdown(prop, elem){
     }
 
     editPopup.innerHTML += html
+
+    //position popup
+    let rect = elem.getBoundingClientRect()
+    editPopup.style.top = rect.top - document.querySelector("nav").clientHeight + rect.height + "px"
+    editPopup.style.left = Math.min(
+        rect.left - document.querySelector("aside").clientWidth,
+        window.innerWidth - editPopup.clientWidth - document.querySelector("aside").clientWidth - 10
+    ) + "px"
+    editPopup.classList.add("active")
+
+    setTimeout(()=>{
+    },500)
 
     document.body.addEventListener('click', closePropertyDropdown);
 }
@@ -343,6 +391,28 @@ function confirmPropertyDropdown(prop, ID){
         currentAnimal.age = new Date().getFullYear() - new Date(currentAnimal.birthdate).getFullYear()
         animalHtml.querySelector(".age").innerText = currentAnimal.age
     }
+    if(prop === "image"){
+        const files = document.querySelector('#imagepicker').files;
+        console.log(files[0])
+        const formData = new FormData();
+
+        formData.append('image', files[0])
+
+        fetch ("./backend/upload.php?ID=" + editingAnimalID, {
+            method: "POST",
+            body: formData,
+        }).then ((response) => {
+            console.log (response.text());
+            if (response.status === 200) {
+                console.log("Dateien wurden geladen");
+                currentAnimal[prop] = "./uploads/animalimage-" + editingAnimalID + ".jpg"
+                animalHtml.querySelector(".imgbox").style.backgroundImage = "url('./uploads/animalimage-" + editingAnimalID + ".jpg')"
+            }
+            else{
+                PopupEngine.createNotification({Text:"Error while uploading file"})
+            }
+        });
+    }
     else{
         clickedElem.innerText = filterData[prop][ID].name
         currentAnimal[prop] = ID
@@ -355,10 +425,6 @@ function closePropertyDropdown(event){
     if(!editPopup.contains(event.target) && !clickedElem.contains(event.target)) {
         confirmPropertyDropdown()
     }
-}
-
-function editDateDropdown(prop, elem){
-    document.querySelector('#datePick').showPicker()
 }
 
 function editProperty(prop, elem){

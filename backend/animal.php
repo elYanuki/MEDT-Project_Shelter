@@ -28,6 +28,9 @@ if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]) {
         case "updateAnimals":
             $animals->update($postBody);
             break;
+        case "deleteAnimal":
+            $animals->delete($postBody);
+            break;
     }
 }
 else {

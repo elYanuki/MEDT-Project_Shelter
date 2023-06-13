@@ -79,4 +79,13 @@ from animal a
             echo "SQL error occured: " . $err->getMessage();
         }
     }
+
+    function delete($animal){
+        try {
+            $sql = "delete from animal where ID = '{$animal->ID}' and shelter_email = '{$_SESSION['userEmail']}'";
+            return mysqli_query($this->connection, $sql);
+        } catch (mysqli_sql_exception $err) {
+            echo "SQL error occured: " . $err->getMessage();
+        }
+    }
 }

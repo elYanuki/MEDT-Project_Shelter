@@ -39,7 +39,7 @@ button {
 /************ Main Style ************/
 main {
   display: flex;
-  height: 93dvh;
+  height: 94dvh;
   position: relative;
 }
 
@@ -55,18 +55,22 @@ hr {
 /*---------- nav ----------*/
 nav {
   width: 100%;
-  height: 7dvh;
+  height: 6dvh;
   background-color: hsl(0, 0%, 12%);
   display: flex;
   justify-content: center;
 }
 nav h1 {
-  font-size: 6dvh;
+  font-size: 5dvh;
   vertical-align: middle;
   margin-block: auto;
   text-transform: uppercase;
   font-family: "Kanit", sans-serif;
   line-height: 100%;
+}
+nav img {
+  height: 100%;
+  object-fit: cover;
 }
 
 /*---------- aside ----------*/
@@ -296,6 +300,13 @@ main .animals .content .animal {
   font-family: "montserrat", "sans-serif";
   width: 100%;
   overflow: hidden;
+  position: relative;
+}
+main .animals .content .animal:hover .top .imgbox i {
+  display: block;
+}
+main .animals .content .animal:hover .bottom i {
+  display: block;
 }
 main .animals .content .animal:hover .top .imgbox i {
   display: block;
@@ -320,6 +331,28 @@ main .animals .content .animal h2:focus-visible {
 }
 main .animals .content .animal hr.accent {
   border-color: hsl(43, 100%, 57%);
+}
+main .animals .content .animal i {
+  position: absolute;
+  padding: 0.2rem;
+  font-size: 1.1rem;
+  color: hsl(0, 0%, 80%);
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0.2rem;
+  transition: all 0.2s;
+  display: none;
+  cursor: pointer;
+}
+main .animals .content .animal i:hover {
+  color: hsl(0, 0%, 100%);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+main .animals .content .animal i.fa-trash {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  font-size: 1rem;
+  padding: 0.3rem;
 }
 main .animals .content .animal span.label {
   text-transform: uppercase;
@@ -382,9 +415,9 @@ main .animals .content .animal .top .imgbox {
   margin-left: 0.5rem;
   height: 5.5rem;
   box-sizing: border-box;
-  background-image: url(./img/michi.jpeg);
   background-size: cover;
   background-position: center;
+  background-color: hsl(0, 0%, 15%);
   border-radius: 0.5rem;
   position: relative;
 }
@@ -404,10 +437,13 @@ main .animals .content .animal .top .imgbox i {
 main .animals .content .animal .top .imgbox i:hover {
   color: hsl(0, 0%, 100%);
   background-color: rgba(0, 0, 0, 0.4);
+  bottom: 0.1rem;
+  right: 0.1rem;
 }
 
 #editPopup {
   position: absolute;
+  z-index: 50;
   background-color: hsl(0, 0%, 20%);
   border-radius: 0.3rem;
   padding: 0.4rem;
