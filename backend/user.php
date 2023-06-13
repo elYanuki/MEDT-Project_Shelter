@@ -49,6 +49,11 @@
             }
         }
     }
+    else if($type == "logOut"){
+        $_SESSION["loggedIn"] = false;
+        $_SESSION["userEmail"] = null;
+        $response -> loggedIn = false;
+    }
 
     else if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]) {
         $response->loggedIn = true;

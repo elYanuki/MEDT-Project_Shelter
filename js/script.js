@@ -29,6 +29,24 @@ function checkLogin(){
         });
 }
 
+function logOut(){
+    fetch(`./backend/user.php/logOut`)
+        .then((response) => {
+            return response.json()
+        })
+        .then(answer=>{
+            if(answer.loggedIn !== true){
+                window.location.replace(document.location.href + "/login");
+            }
+            else{
+                PopupEngine.createNotification({text: "an unkown error occured: the logout failed"})
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+}
+
 function getFilterData(){
     fetch(`./backend/user.php/getFilterData`)
         .then((response) => {
@@ -245,7 +263,7 @@ function renderAnimal(data){
         note: data.note || "",
         food: data.food || "",
         owner: data.owner_name || shelterName,
-        image: data.image == null || data.image == "" ? "./img/animal-default.png" : data.image
+        image: data.image == null || data.image === "" ? "./img/animal-default.png" : data.image
     }
 
     console.log(data.name, data.birthdate, processedData.age)
@@ -406,7 +424,7 @@ function confirmPropertyDropdown(prop, ID){
             if (response.status === 200) {
                 console.log("Dateien wurden geladen");
                 currentAnimal[prop] = "./uploads/animalimage-" + editingAnimalID + ".jpg"
-                animalHtml.querySelector(".imgbox").style.backgroundImage = "url('./uploads/animalimage-" + editingAnimalID + ".jpg')"
+                animalHtml.querySelector(".imgbox").style.backgroundImage = "url('./uploads/animalimage-" + editingAnimalID + ".jpg?refresh=" + Date.now() + "')"
             }
             else{
                 PopupEngine.createNotification({Text:"Error while uploading file"})
@@ -514,4 +532,8 @@ function renderAside(){
 
     document.querySelector("main aside .content").innerHTML = html
     document.querySelector("main aside .content").appendChild(typeHtml)
+}
+
+function toggleAside(){
+    document.querySelector("main aside").classList.toggle("active")
 }

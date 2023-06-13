@@ -30,6 +30,7 @@
 	<main>
 		<aside>
 			<div class="buttons top">
+				<div class="toggleAside" onclick="toggleAside()"><i class="fa-solid fa-bars burger"></i><i class="fa-solid fa-xmark x"></i></div>
 				<button onclick="selectAside('roomID', this)">rooms</button>
 				<button onclick="selectAside('typeID', this)">types</button>
 				<button onclick="selectAside('ownerID', this)">owners</button>
@@ -41,15 +42,15 @@
 
 			<div class="buttons bottom">
 				<button class="editButton">edit shelter<i class="fa-solid fa-pen-to-square"></i></button>
-				<button class="editButton">log out<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+				<button onclick="logOut()" class="saveButton">log out<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
 			</div>
 		</aside>
 		<div class="animals">
 			<div class="header">
                 <p class="path"><span onclick="renderAnimals()">all-animals</span> / <span>hunde</span></p>
 				<div class="buttons">
-					<button class="" onclick="updateServer()">save changes</button>
-					<button class="outlined" id="add-animal" onclick="addAnimal()">add-animal</button>
+					<button class="" onclick="updateServer()"><span class="text">save changes</span><i class="fa-solid fa-floppy-disk"></i></button>
+					<button class="outlined" id="add-animal" onclick="addAnimal()"><span class="text">add-animal</span><i class="fa-solid fa-circle-plus"></i></button>
 				</div>
 			</div>
 

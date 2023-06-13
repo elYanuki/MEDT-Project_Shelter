@@ -73,6 +73,11 @@ nav img {
   object-fit: cover;
 }
 
+@media (max-width: 767px) {
+  nav h1 {
+    font-size: 4dvh;
+  }
+}
 /*---------- aside ----------*/
 main aside {
   width: fit-content;
@@ -86,11 +91,53 @@ main aside {
 main aside hr {
   margin-block: 0.3rem;
 }
+main aside .toggleAside {
+  display: none;
+}
 
+@media (max-width: 767px) {
+  body main aside {
+    position: absolute;
+    z-index: 100;
+    width: 10vw;
+    min-width: 0;
+    padding: 0.5rem;
+    box-shadow: 0.5rem 0.5rem 0.5rem rgba(0, 0, 0, 0.42);
+    transition: all 0.3s;
+  }
+  body main aside .toggleAside {
+    display: grid;
+    place-content: center;
+    font-size: 1.2rem;
+    padding: 0.2rem;
+  }
+  body main aside .toggleAside .x {
+    display: none;
+  }
+  body main aside:not(.active) {
+    border-bottom-right-radius: 0.5rem;
+  }
+  body main aside:not(.active) .buttons.bottom, body main aside:not(.active) button, body main aside:not(.active) .content, body main aside:not(.active) hr {
+    display: none !important;
+  }
+  body main aside.active {
+    height: 94dvh;
+    width: 90vw;
+  }
+  body main aside.active .toggleAside .x {
+    display: block;
+  }
+  body main aside.active .toggleAside .burger {
+    display: none;
+  }
+  body main aside .buttons.bottom .editButton {
+    display: none;
+  }
+}
 main aside .buttons.top {
   display: flex;
   flex-wrap: wrap;
-  gap: 1vw;
+  gap: 1rem;
 }
 main aside .buttons.top button {
   text-transform: uppercase;
@@ -253,6 +300,11 @@ main .animals .header .path span.thispage {
   color: hsl(0, 0%, 100%);
 }
 
+@media (max-width: 767px) {
+  main .animals .header .path {
+    margin-left: 2rem;
+  }
+}
 main .animals .header button {
   padding: 0.15rem 0.8rem;
   color: hsl(43, 100%, 57%);
@@ -260,6 +312,9 @@ main .animals .header button {
   font-family: "Kanit", sans-serif;
   text-transform: uppercase;
   transition: all 0.2s;
+}
+main .animals .header button i {
+  display: none;
 }
 main .animals .header button.outlined {
   border: 0.12rem solid hsl(43, 100%, 57%);
@@ -273,6 +328,18 @@ main .animals .header button.outlined:hover {
   background-color: hsl(43, 100%, 57%);
 }
 
+@media (max-width: 767px) {
+  main .animals .header button .text {
+    display: none;
+  }
+  main .animals .header button i {
+    display: block;
+    font-size: 1.3rem;
+  }
+  main .animals .header button.outlined {
+    border: none;
+  }
+}
 main .animals .content {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -303,10 +370,10 @@ main .animals .content .animal {
   position: relative;
 }
 main .animals .content .animal:hover .top .imgbox i {
-  display: block;
+  opacity: 1;
 }
 main .animals .content .animal:hover .bottom i {
-  display: block;
+  opacity: 1;
 }
 main .animals .content .animal:hover .top .imgbox i {
   display: block;
@@ -340,7 +407,7 @@ main .animals .content .animal i {
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 0.2rem;
   transition: all 0.2s;
-  display: none;
+  opacity: 0;
   cursor: pointer;
 }
 main .animals .content .animal i:hover {
@@ -348,7 +415,6 @@ main .animals .content .animal i:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
 main .animals .content .animal i.fa-trash {
-  position: absolute;
   bottom: 0.5rem;
   right: 0.5rem;
   font-size: 1rem;
@@ -419,24 +485,10 @@ main .animals .content .animal .top .imgbox {
   background-position: center;
   background-color: hsl(0, 0%, 15%);
   border-radius: 0.5rem;
+  border: 0.1rem solid hsl(0, 0%, 30%);
   position: relative;
 }
 main .animals .content .animal .top .imgbox i {
-  position: absolute;
-  bottom: 0.1rem;
-  right: 0.1rem;
-  padding: 0.2rem;
-  font-size: 1.1rem;
-  color: hsl(0, 0%, 80%);
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 0.2rem;
-  transition: all 0.2s;
-  display: none;
-  cursor: pointer;
-}
-main .animals .content .animal .top .imgbox i:hover {
-  color: hsl(0, 0%, 100%);
-  background-color: rgba(0, 0, 0, 0.4);
   bottom: 0.1rem;
   right: 0.1rem;
 }

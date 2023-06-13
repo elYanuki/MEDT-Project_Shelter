@@ -96,6 +96,12 @@ nav{
 	}
 }
 
+@media (max-width: 767px) {
+	nav h1{
+		font-size: 4dvh;
+	}
+}
+
 //endregion
 
 /*---------- aside ----------*/
@@ -114,12 +120,66 @@ main aside{
 	hr{
 		margin-block: 0.3rem;
 	}
+
+	.toggleAside{
+		display: none;
+	}
+}
+
+@media (max-width: 767px) {
+	body main aside{
+		position: absolute;
+		z-index: 100;
+		width: 10vw;
+		min-width: 0;
+		padding: .5rem;
+		box-shadow: .5rem .5rem .5rem rgba(0, 0, 0, 0.42);
+		transition: all .3s;
+
+		.toggleAside{
+			display: grid;
+			place-content: center;
+			font-size: 1.2rem;
+			padding: .2rem;
+
+			.x{
+				display: none;
+			}
+		}
+
+		&:not(.active){
+			border-bottom-right-radius: .5rem;
+
+			.buttons.bottom, button, .content, hr{
+				display: none !important;
+			}
+		}
+
+		&.active{
+			height: 94dvh;
+			width: 90vw;
+
+			.toggleAside{
+				.x{
+					display: block;
+				}
+
+				.burger{
+					display: none;
+				}
+			}
+		}
+
+		.buttons.bottom .editButton{
+			display: none;
+		}
+	}
 }
 
 main aside .buttons.top{
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1vw;
+	gap: 1rem;
 
 	button {
 		text-transform: uppercase;
@@ -315,6 +375,12 @@ main .animals .header .path{
 	}
 }
 
+@media (max-width: 767px) {
+	main .animals .header .path {
+		margin-left: 2rem;
+	}
+}
+
 main .animals .header button{
 	padding: .15rem .8rem;
 
@@ -326,6 +392,10 @@ main .animals .header button{
 	text-transform: uppercase;
 	transition: all .2s;
 
+	i{
+		display: none;
+	}
+
 	&.outlined{
 		border: .12rem solid $color-accent;
 		border-radius: 1rem;
@@ -336,6 +406,23 @@ main .animals .header button{
 			*/
 			color: black;
 			background-color: $color-accent;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	main .animals .header button {
+		.text {
+			display: none;
+		}
+
+		i {
+			display: block;
+			font-size: 1.3rem;
+		}
+
+		&.outlined {
+			border: none;
 		}
 	}
 }
@@ -371,11 +458,11 @@ main .animals .content .animal{
 	position: relative;
 
 	&:hover .top .imgbox i{
-		display: block;
+		opacity: 1;
 	}
 
 	&:hover .bottom i{
-		display: block;
+		opacity: 1;
 	}
 
 	&:hover .top .imgbox i{
@@ -416,7 +503,7 @@ main .animals .content .animal{
 		background-color: rgba(0, 0, 0, 0.6);
 		border-radius: .2rem;
 		transition: all .2s;
-		display: none;
+		opacity: 0;
 		cursor: pointer;
 
 		&:hover{
@@ -425,7 +512,6 @@ main .animals .content .animal{
 		}
 
 		&.fa-trash{
-			position: absolute;
 			bottom: .5rem;
 			right: .5rem;
 			font-size: 1rem;
@@ -512,25 +598,12 @@ main .animals .content .animal{
 				color: $gray-300
 			}
 			border-radius: .5rem;
+			border: .1rem solid $gray-380;
 			position: relative;
 
 			i{
-				position: absolute;
 				bottom: .1rem;
 				right: .1rem;
-				padding: .2rem;
-				font-size: 1.1rem;
-				color: $gray-text-hover;
-				background-color: rgba(0, 0, 0, 0.6);
-				border-radius: .2rem;
-				transition: all .2s;
-				display: none;
-				cursor: pointer;
-
-				&:hover{
-					color: $color-contrast;
-					background-color: rgba(0,0,0,0.4);
-				}
 			}
 		}
 	}

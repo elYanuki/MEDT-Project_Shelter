@@ -1,5 +1,4 @@
-
-    <?php
+ <?php
     global $conn;
     session_start();
     require_once "./Database.class.php";
@@ -21,6 +20,12 @@
             $ID = $_GET["ID"];
 
             $target_file = $target_dir . "animalimage-" . $ID . ".jpg";
+
+            // Delete existing file if it exists
+            if (file_exists($target_file)) {
+                unlink($target_file);
+            }
+
             if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 echo "upload successfull";
             }
