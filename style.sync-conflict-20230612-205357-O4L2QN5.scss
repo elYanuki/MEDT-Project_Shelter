@@ -364,10 +364,6 @@ main .animals .content .animal{
 	width: 100%;
 	overflow: hidden;
 
-	&:hover .top .imgbox i{
-		display: block;
-	}
-
 	h2{
 		font: {
 			size: 2rem;
@@ -472,26 +468,6 @@ main .animals .content .animal{
 				position: center;
 			}
 			border-radius: .5rem;
-			position: relative;
-
-			i{
-				position: absolute;
-				bottom: .1rem;
-				right: .1rem;
-				padding: .2rem;
-				font-size: 1.1rem;
-				color: $gray-text-hover;
-				background-color: rgba(0, 0, 0, 0.6);
-				border-radius: .2rem;
-				transition: all .2s;
-				display: none;
-				cursor: pointer;
-
-				&:hover{
-					color: $color-contrast;
-					background-color: rgba(0,0,0,0.4);
-				}
-			}
 		}
 	}
 }

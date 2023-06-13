@@ -297,9 +297,6 @@ main .animals .content .animal {
   width: 100%;
   overflow: hidden;
 }
-main .animals .content .animal:hover .top .imgbox i {
-  display: block;
-}
 main .animals .content .animal h2 {
   font-size: 2rem;
   font-weight: 500;
@@ -386,24 +383,6 @@ main .animals .content .animal .top .imgbox {
   background-size: cover;
   background-position: center;
   border-radius: 0.5rem;
-  position: relative;
-}
-main .animals .content .animal .top .imgbox i {
-  position: absolute;
-  bottom: 0.1rem;
-  right: 0.1rem;
-  padding: 0.2rem;
-  font-size: 1.1rem;
-  color: hsl(0, 0%, 80%);
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 0.2rem;
-  transition: all 0.2s;
-  display: none;
-  cursor: pointer;
-}
-main .animals .content .animal .top .imgbox i:hover {
-  color: hsl(0, 0%, 100%);
-  background-color: rgba(0, 0, 0, 0.4);
 }
 
 #editPopup {

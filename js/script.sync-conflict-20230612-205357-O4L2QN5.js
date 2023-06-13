@@ -95,14 +95,7 @@ function checkScreenSize(){
 }
 
 function addAnimal(){
-    const data = {
-        name: "animal",
-        typeID: currentFilter.sort === "typeID" ? currentFilter.ID : 1,
-        breedID: currentFilter.breed || 0,
-        gender: null,
-        roomID: currentFilter.sort === "roomID" ? currentFilter.ID : null,
-        ownerID: currentFilter.sort === "ownerID" ? currentFilter.ID : null
-    };
+    const data = {name: "animal", typeID: currentFilter.sort === "typeID" ? currentFilter.ID : 1, breedID: currentFilter.breed || 0, gender: 0, roomID: currentFilter.sort === "roomID" ? currentFilter.ID : 0, ownerID: currentFilter.sort === "ownerID" ? currentFilter.ID : 0};
 
     console.log(data)
     fetch("./backend/animal.php/addAnimal", {
@@ -148,14 +141,8 @@ function renderAnimals(sort, ID, breed) {
         const path = document.querySelector(".animals .header .path")
         path.innerHTML = `<span onclick="renderAnimals()">all-animals</span>`
         if (sort) {
-            if(ID == null){
-                path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} none</span>`
-                selectedName = "none"
-            }
-            else{
-                path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} ${filterData[sort][ID].name}</span>`
-                selectedName = filterData[sort][ID].name
-            }
+            path.innerHTML += ` / <span onclick="renderAnimals('${sort}', ${ID})">${indicators[sort]} ${filterData[sort][ID].name}</span>`
+            selectedName = filterData[sort][ID].name
         }
         if (breed) {
             path.innerHTML += ` / <span onclick="refreshAnimalRender()">${filterData.breedID[breed].name}</span>`
@@ -179,8 +166,6 @@ function renderAnimals(sort, ID, breed) {
             elem.innerHTML = ""
         })
 
-        if(ID == null) ID=0
-
         Object.entries(animalData).forEach((item) => {
             const [key, animal] = item;
             if (sort && parseInt(animal[sort]) !== ID) return
@@ -200,12 +185,12 @@ function renderAnimal(data){
     let isValidDateFormat = /^\d{4}-\d{2}-\d{2}$/
 
     let processedData = {
-        gender: filterData.gender[data.gender].name || "unknown",
-        birthdate: data.birthdate === "0000-00-00" || data.birthdate == null ? "unknown" : data.birthdate,
-        age: data.birthdate === "0000-00-00" || data.birthdate == null ? "unknown" : new Date().getFullYear() - birthdateObject.getFullYear(),
+        gender: filterData.gender[data.gender].name,
+        age: data.birthdate === "0000-00-00" ? "unknown" : new Date().getFullYear() - birthdateObject.getFullYear(),
         note: data.note || "",
         food: data.food || "",
         owner: data.owner_name || shelterName,
+        birthdate: data.birthdate === "0000-00-00" ? "unknown" : data.birthdate
     }
 
     console.log(data.name, data.birthdate, processedData.age)
@@ -230,9 +215,7 @@ function renderAnimal(data){
                     </p>
                     <hr class="accent">
                 </div>
-                <div class="imgbox" style="background-image: ${data.image}">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </div>
+                <div class="imgbox" style="background-image: ${data.image}"></div>
             </div>
 
             <div class="bottom">
@@ -241,7 +224,7 @@ function renderAnimal(data){
                 <span class="label"> • age</span><span data-popup-text="this property is auto calculated" class="age">${processedData.age}</span></p>
                 <p class="room">
                     <span class="label">ROOM</span>
-                    <span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name || "unknown"}</span>
+                    <span class="link" onclick="editPropertyDropdown('roomID', this)">${data.room_name}</span>
                 </p>
                 <br>
                 <p>
@@ -365,9 +348,9 @@ function editProperty(prop, elem){
     editingAnimalID = elem.closest(".animal").dataset.id
     currentAnimal = editedAnimals[editingAnimalID] || animalData[editingAnimalID]
 
-    if(elem.innerText === "")return
+    if(elem.innerHTML === "")return
 
-    currentAnimal[prop] = elem.innerText
+    currentAnimal[prop] = elem.innerHTML
     editedAnimals[editingAnimalID] = currentAnimal
 }
 
@@ -384,6 +367,7 @@ function updateServer(){
             return response.text()
         })
         .then((answer) => {
+            console.log(answer)
             editedAnimals = {}
         })
         .catch((error) => {
@@ -424,7 +408,7 @@ function renderAside(){
     })
     html += `<ul class="roomID">
                 ${items}
-                <li class="last" onclick="renderAnimals('roomID', null)">None</li>
+                <li class="last" onclick="renderAnimals('roomID', ${filterData.ownerID[0].ID})">${filterData.ownerID[0].name}</li>
             </ul>`
 
     let typeHtml = document.createElement("ul")
