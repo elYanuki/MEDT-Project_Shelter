@@ -48,17 +48,16 @@ hr {
   margin-block: 0.5rem;
 }
 
-.popupEngineNotification {
-  border: 1px solid hsl(0, 0%, 55%);
-}
-
 /*---------- nav ----------*/
 nav {
   width: 100%;
   height: 6dvh;
   background-color: hsl(0, 0%, 12%);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
 }
 nav h1 {
   font-size: 5dvh;
@@ -68,14 +67,47 @@ nav h1 {
   font-family: "Kanit", sans-serif;
   line-height: 100%;
 }
-nav img {
+nav .left {
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  min-width: 20%;
+  width: fit-content;
+}
+nav .left .logo {
   height: 100%;
-  object-fit: cover;
+  aspect-ratio: 1;
+}
+nav .left .logo img {
+  width: 100%;
+}
+nav .left h1 {
+  color: hsl(43, 100%, 57%);
+}
+nav .right {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+nav .right h1 {
+  color: hsl(0, 0%, 80%);
 }
 
 @media (max-width: 767px) {
   nav h1 {
     font-size: 4dvh;
+  }
+  nav .left {
+    min-width: 0rem;
+  }
+  nav .left h1 {
+    display: none;
+  }
+  nav .left .logo {
+    height: 80%;
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
   }
 }
 /*---------- aside ----------*/
@@ -130,14 +162,11 @@ main aside .toggleAside {
   body main aside.active .toggleAside .burger {
     display: none;
   }
-  body main aside .buttons.bottom .editButton {
-    display: none;
-  }
 }
 main aside .buttons.top {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0rem 1rem;
 }
 main aside .buttons.top button {
   text-transform: uppercase;
@@ -228,6 +257,7 @@ main aside .buttons.bottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 0 1rem;
 }
 main aside .buttons.bottom button {
   color: hsl(0, 0%, 80%);
@@ -246,6 +276,55 @@ main aside .buttons.bottom button:hover {
 main aside .buttons.bottom button i {
   color: hsl(0, 0%, 55%);
   margin-inline: 0.5rem;
+}
+
+main aside .createFilterItem {
+  display: flex;
+  /*flex-wrap: wrap;*/
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: hsl(0, 0%, 20%);
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  font-family: "Kanit", sans-serif;
+  box-sizing: border-box;
+}
+main aside .createFilterItem input, main aside .createFilterItem select {
+  width: 100%;
+  padding: 0.2rem;
+  box-sizing: border-box;
+}
+main aside .createFilterItem button {
+  margin-left: auto;
+  color: hsl(43, 100%, 57%);
+  transition: all 0.2s;
+  padding: 0.3rem;
+  text-transform: uppercase;
+  border: 0.1rem solid hsl(43, 100%, 57%);
+  border-radius: 0.5rem;
+  aspect-ratio: 1;
+  height: 2rem;
+  display: grid;
+  place-content: center;
+}
+main aside .createFilterItem button:hover {
+  color: hsl(0, 0%, 20%);
+  background-color: hsl(43, 100%, 57%);
+}
+main aside .createFilterItem div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+main aside .createFilterItem div button {
+  aspect-ratio: initial;
+}
+
+main aside .content .typeID .createFilterItem {
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /*---------- animals ----------*/
@@ -302,7 +381,7 @@ main .animals .header .path span.thispage {
 
 @media (max-width: 767px) {
   main .animals .header .path {
-    margin-left: 2rem;
+    margin-left: 2.5rem;
   }
 }
 main .animals .header button {
@@ -338,6 +417,10 @@ main .animals .header button.outlined:hover {
   }
   main .animals .header button.outlined {
     border: none;
+  }
+  main .animals .header button:hover {
+    background-color: transparent !important;
+    color: hsl(43, 100%, 57%) !important;
   }
 }
 main .animals .content {
@@ -532,6 +615,11 @@ main .animals .content .animal .top .imgbox i {
   height: 100%;
 }
 
+@media (max-width: 767px) {
+  main .animals .content .animal i {
+    opacity: 1;
+  }
+}
 /*---------- login ----------*/
 main.login {
   /*TODO this is offset i think*/
@@ -645,6 +733,18 @@ main.login {
 .popupEngineModalContent {
   background-color: hsl(0, 0%, 12%);
   color: hsl(0, 0%, 100%);
+}
+
+.popupEngineModalHeading {
+  margin-bottom: 1rem;
+}
+
+.popupEngineModalButton {
+  color: hsl(43, 100%, 57%);
+}
+
+.popupEngineNotification {
+  border: 1px solid hsl(0, 0%, 55%);
 }
 
 /************ Imports ************/

@@ -68,10 +68,26 @@
                 "roomID" => $users->getRooms()
             );
         }
+
+        if ($type == "adminlogin") {
+            if (isset($_GET["password"]) && $users->checkAdminCredentials($_GET["password"], $_SESSION["userEmail"])){
+                $_SESSION["adminLoggedIn"] = true;
+                $response->adminLoggedIn = true;
+            }
+            else{
+                $response->adminLoggedIn = false;
+                $_SESSION["adminLoggedIn"] = false;
+            }
+        }
+        else if ($type == "adminlogout") {
+            $_SESSION["adminLoggedIn"] = false;
+            $response->adminLoggedIn = false;
+        }
     }
     else {
         $response->message = "Not Logged in!";
         $response->loggedIn = false;
+        $response->adminLoggedIn = false;
     }
 
     echo json_encode($response);

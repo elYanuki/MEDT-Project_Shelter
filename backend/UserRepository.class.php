@@ -23,7 +23,7 @@ class UserRepository
             $hashedAPW = password_hash($user->adminPassword, PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO user (email, name, password, admin_password) 
-            VALUES ('{$user->email}', '{$user->name}', '$hashedPW', '{$user->password}')";
+            VALUES ('{$user->email}', '{$user->name}', '$hashedPW', '$hashedAPW')";
             return mysqli_query($this->connection, $sql);
         } catch (mysqli_sql_exception $err) {
             echo "SQL error occurred: " . $err->getMessage();
@@ -46,6 +46,22 @@ class UserRepository
             echo "Error while checking data...: " . $err;
         }
     }
+    function checkAdminCredentials($password, $email)
+    {
+        try {
+            $sql = "SELECT admin_password FROM user WHERE email = '$email'";
+
+            $result = $this->connection->query($sql);
+
+            if($result->num_rows == 0) return false;
+
+            $row = $result->fetch_assoc();
+
+            return password_verify($password, $row['admin_password']);
+        } catch (mysqli_sql_exception $err) {
+            echo "Error while checking data...: " . $err;
+        }
+    }
 
     function emailUsed($email)
     {
@@ -64,7 +80,7 @@ class UserRepository
     }
 
     function getAnimalTypesAndBreeds(){
-        $sql = "select at.ID as type_id, at.name as type_name, ab.id as breed_id, ab.name as breed_name from animal_type at join animal_breed ab on at.ID = ab.animal_type_ID
+        $sql = "select at.ID as type_id, at.name as type_name, ab.id as breed_id, ab.name as breed_name from animal_type at left outer join animal_breed ab on at.ID = ab.animal_type_ID
                 where at.shelter_email = '{$_SESSION['userEmail']}'";
         try {
             $result = $this->connection->query($sql);
@@ -81,7 +97,7 @@ class UserRepository
     }
 
     function getOwners(){
-        $sql = "select ID, name, adress, tel, email, note from owner where shelter_email = '{$_SESSION['userEmail']}'";
+        $sql = "select ID, name from owner where shelter_email = '{$_SESSION['userEmail']}'";
         try {
             $result = $this->connection->query($sql);
 

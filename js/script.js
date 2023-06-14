@@ -7,7 +7,7 @@ let editedAnimals = {}
 
 checkLogin()
 
-PopupEngine.init({backgroundColor: "hsl(0, 0%, 12%)", textColor: "hsl(0, 0%, 100%)", elemBackground: "hsl(0, 0%, 8%)", defaultNotificationLifetime: 2000},)
+PopupEngine.init({backgroundColor: "hsl(0, 0%, 12%)", textColor: "hsl(0, 0%, 100%)", elemBackground: "hsl(0, 0%, 8%)", defaultNotificationLifetime: 2000, notificationOffset: {top: "1vw", bottom: "1vw", left: "20%", right: "1vw"}})
 
 function checkLogin(){
     fetch(`./backend/user.php/`)
@@ -19,7 +19,7 @@ function checkLogin(){
                 window.location.replace(document.location.href + "/login");
             }
             else{
-                document.querySelector("nav h1").innerText = answer.name
+                document.querySelector("nav .sheltername").innerText = answer.name
                 shelterName = answer.name
                 getFilterData()
             }
@@ -30,25 +30,40 @@ function checkLogin(){
 }
 
 function logOut(){
-    fetch(`./backend/user.php/logOut`)
-        .then((response) => {
-            return response.json()
-        })
-        .then(answer=>{
-            if(answer.loggedIn !== true){
-                window.location.replace(document.location.href + "/login");
-            }
-            else{
-                PopupEngine.createNotification({text: "an unkown error occured: the logout failed"})
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+    PopupEngine.createModal({
+        heading: "Log Out?",
+        text: "Sure that you want to log out? We will redirect you to the login screen.",
+        buttons: [
+            {
+                text: "confirm",
+                action: (data) => {
+                    fetch(`./backend/user.php/logOut`)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(answer=>{
+                        if(answer.loggedIn !== true){
+                            window.location.replace(document.location.href + "/login");
+                        }
+                        else{
+                            PopupEngine.createNotification({text: "an unkown error occured: the logout failed"})
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+                },
+                closePopup: true
+            },
+            {
+                text: "cancel",
+            },
+        ]
+    })
 }
 
 function getFilterData(){
-    fetch(`./backend/user.php/getFilterData`)
+    return fetch(`./backend/user.php/getFilterData`)
         .then((response) => {
             return response.json()
         })
@@ -115,7 +130,7 @@ function checkScreenSize(){
 function addAnimal(){
     const data = {
         name: "animal",
-        typeID: currentFilter.sort === "typeID" ? currentFilter.ID : 1,
+        typeID: currentFilter.sort === "typeID" ? currentFilter.ID : null,
         breedID: currentFilter.breed || 0,
         gender: null,
         roomID: currentFilter.sort === "roomID" ? currentFilter.ID : null,
@@ -196,6 +211,8 @@ indicators = {
 }
 
 function renderAnimals(sort, ID, breed) {
+    document.querySelector("main aside").classList.remove("active")
+
     updateServer()
     getAnimals().then(() => {
 
@@ -274,7 +291,7 @@ function renderAnimal(data){
                 <div class="left">
                     <h2 contenteditable="true" onblur="editProperty('name', this)">${data.name}</h2>
                     <p class="subtext">
-                        <span class="link" onclick="editPropertyDropdown('typeID', this)">${data.type_name}</span> • 
+                        <span class="link" onclick="editPropertyDropdown('typeID', this)">${data.type_name || "unknown"}</span> • 
                         <span class="link breed" onclick="editPropertyDropdown('breedID', this)">${data.breed_name || "unknown"}</span> • 
                         <span class="link" onclick="editPropertyDropdown('gender', this)">${processedData.gender}</span>
                     </p>
@@ -489,28 +506,45 @@ function selectAside(sort, elem){
     elem.classList.add("selected")
 }
 
-function renderAside(){
+function renderAside(adminMode = false){
     //todo add no owner / no room, (add button) - for owner
     let html = ""
+    let add = ""
 
+    //OWNERS
     let items = ""
     Object.entries(filterData.ownerID).forEach(item => {
         const [key, value] = item;
         if(value.ID !== 0)
             items += `<li onclick="renderAnimals('ownerID', ${value.ID})">${value.name}</li>`
     })
-    html += `<ul class="ownerID">${items}<li class="last" onclick="renderAnimals('ownerID', ${filterData.ownerID[0].ID})">${filterData.ownerID[0].name}</li></ul>`
+    if(adminMode){
+        add = `<div class="createFilterItem"><input placeholder="name" type="text" class="ownerInput"><button onclick="addFilterItem('owner')"><i class="fa-solid fa-plus"></i></button></div>`
+    }
+    html += `<ul class="ownerID">
+                ${items}
+                <li class="last" onclick="renderAnimals('ownerID', ${filterData.ownerID[0].ID})">${filterData.ownerID[0].name}</li>
+                ${add}
+            </ul>`
 
+
+    //ROOMS
     items = ""
     Object.entries(filterData.roomID).forEach(item => {
         const [key, value] = item;
         items += `<li onclick="renderAnimals('roomID', ${value.ID})">${value.name}</li>`
     })
+    if(adminMode){
+        add = `<div class="createFilterItem"><input placeholder="name" type="text" class="roomInput"><button onclick="addFilterItem('room')"><i class="fa-solid fa-plus"></i></button></div>`
+    }
     html += `<ul class="roomID">
                 ${items}
                 <li class="last" onclick="renderAnimals('roomID', null)">None</li>
+                ${add}
             </ul>`
 
+
+    //TYPES + BREEDS
     let typeHtml = document.createElement("ul")
     typeHtml.classList.add("typeID")
     let lastType = -1
@@ -518,22 +552,195 @@ function renderAside(){
     let listObject
     filterData.animalTypesAndBreeds.forEach(item => {
         if(item.type_id !== lastType){
-            if(listItem)typeHtml.appendChild(listItem)
+            if(listItem) typeHtml.appendChild(listItem)
 
             lastType = item.type_id
             listItem = document.createElement("li")
             listItem.innerHTML = `<span onclick="renderAnimals('typeID', ${item.type_id})">${item.type_name}</span>`
+
             listObject = document.createElement("ul")
             listItem.appendChild(listObject)
+
         }
-        listObject.innerHTML += `<li onclick="renderAnimals('typeID', ${item.type_id}, ${item.breed_id})">${item.breed_name}</li>`
+        if(listObject && item.breed_name !== null) listObject.innerHTML += `<li onclick="renderAnimals('typeID', ${item.type_id}, ${item.breed_id})">${item.breed_name}</li>`
+        console.log(listItem, listObject)
+
     })
-    typeHtml.appendChild(listItem)
+    if(listItem) typeHtml.appendChild(listItem)
+
+    if(adminMode){
+        let createContainer = document.createElement("div")
+        createContainer.classList.add("createFilterItem")
+
+        let options = ""
+
+        for (const typeIDKey in filterData.typeID) {
+            console.log(typeIDKey)
+            options += `<option value="${filterData.typeID[typeIDKey].ID}">${filterData.typeID[typeIDKey].name}</option>`
+        }
+
+        options += `<option value="none" selected>none</option>`
+
+        createContainer.innerHTML = `
+            <input placeholder="name" type="text" class="typeInput">
+            <div>
+                <label>parent</label>
+                <select class="parentSelect">${options}</select>
+                <button onclick="addFilterItem('type')">add</button>
+            </div>
+            `
+        typeHtml.appendChild(createContainer)
+    }
 
     document.querySelector("main aside .content").innerHTML = html
     document.querySelector("main aside .content").appendChild(typeHtml)
 }
 
-function toggleAside(){
+function toggleAside() {
     document.querySelector("main aside").classList.toggle("active")
+}
+
+let editButton = document.querySelector("main aside .buttons .editButton")
+function toggleAdminMode(){
+    if(editButton.dataset.mode === "join") {
+        PopupEngine.createModal({
+            heading: "Edit Shelter",
+            text: "please enter the admin password",
+            inputs: [
+                {
+                    type: "password",
+                    placeholder: "password",
+                },
+            ],
+            buttons: [
+                {
+                    text: "confirm",
+                },
+                {
+                    text: "cancel",
+                },
+            ]
+        }).then((data) => {
+            if (data.buttonIndex === 0) {
+                console.log("continuing with data name:", data.inputValues[0])
+                fetch(`./backend/user.php/adminlogin?password=${data.inputValues[0]}`)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(answer => {
+                        console.log(answer)
+                        if (answer.adminLoggedIn === true) {
+                            editButton.innerText = "Leave Editmode"
+                            editButton.dataset.mode = "leave";
+                            renderAside(true)
+                            selectAside("roomID", document.querySelector("main aside .buttons.top button:nth-of-type(1)"))
+                        } else {
+                            PopupEngine.createNotification({
+                                text: "Invalid shelter-admin password entered",
+                                position: ["bottom", "right"],
+                                lifetime: 10_000
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        })
+    }
+    else{
+        fetch(`./backend/user.php/adminlogout`)
+            .then((response) => {
+                return response.json()
+            })
+            .then(answer => {
+                console.log(answer)
+                renderAside()
+                selectAside("roomID", document.querySelector("main aside .buttons.top button:nth-of-type(1)"))
+
+                editButton.innerHTML = "edit shelter<i class=\"fa-solid fa-pen-to-square\"></i>"
+                editButton.dataset.mode = "join";
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
+}
+
+function addFilterItem(type){
+    if(type === "room"){
+        let value = document.querySelector("aside .roomInput").value
+        if(value && value !== "")
+            fetch(`./backend/filter.php/addRoom?name=${value}`)
+                .then((response) => {
+                    return response.text()
+                })
+                .then(answer=>{
+                    console.log(answer)
+                    getFilterData().then(()=>{
+                        renderAside(true)
+                        selectAside("roomID", document.querySelector('main aside .buttons.top button:first-of-type'))
+                    })
+/*
+                    selectAside("roomID", document.querySelector("main aside .buttons.top button:nth-of-type(1)"))
+*/
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+    }
+    else if(type === "owner"){
+        let value = document.querySelector("aside .ownerInput").value
+        if(value && value !== "")
+            fetch(`./backend/filter.php/addOwner?name=${value}`)
+                .then((response) => {
+                    return response.json()
+                })
+                .then(answer=>{
+                    console.log(answer)
+                    getFilterData().then(()=>{
+                        renderAside(true)
+                        selectAside("ownerID", document.querySelector('main aside .buttons.top button:last-of-type'))
+                    })
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+    }
+    else if(type === "type"){
+        let nameValue = document.querySelector("aside .typeInput").value
+        let parentValue = document.querySelector("aside .parentSelect").value
+        if(nameValue && nameValue !== "" && parentValue !== "none") {
+            fetch(`./backend/filter.php/addBreed?name=${nameValue}&parent=${parentValue}`)
+                .then((response) => {
+                    return response.json()
+                })
+                .then(answer => {
+                    console.log(answer)
+                    getFilterData().then(() => {
+                        renderAside(true)
+                        selectAside("typeID", document.querySelector('main aside .buttons.top button:nth-of-type(2)'))
+                    })
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+        else if(nameValue && nameValue !== "" && parentValue === "none"){
+            fetch(`./backend/filter.php/addType?name=${nameValue}`)
+                .then((response) => {
+                    return response.json()
+                })
+                .then(answer => {
+                    console.log(answer)
+                    getFilterData().then(() => {
+                        renderAside(true)
+                        selectAside("typeID", document.querySelector('main aside .buttons.top button:nth-of-type(2)'))
+                    })
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+    }
 }

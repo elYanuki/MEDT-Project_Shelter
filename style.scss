@@ -66,9 +66,7 @@ hr{
 	margin-block: .5rem;
 }
 
-.popupEngineNotification{
-	border: 1px solid $gray-text;
-}
+
 
 /*---------- nav ----------*/
 
@@ -79,8 +77,11 @@ nav{
 	height: 6dvh;
 	background-color: $gray-200;
 	display: flex;
-	justify-content: center;
-
+	justify-content: space-between;
+	box-shadow: 0 .5rem .5rem rgba(0, 0, 0, 0.3);
+	position: relative;
+	z-index: 10;
+	
 	h1{
 		font-size: 5dvh;
 		vertical-align:middle;
@@ -90,15 +91,58 @@ nav{
 		line-height: 100%;
 	}
 
-	img{
-		height: 100%;
-		object-fit: cover;
+	.left{
+		height: inherit;
+		display: flex;
+		justify-content: center;
+		min-width: 20%;
+		width: fit-content;
+
+		.logo{
+			height: 100%;
+			aspect-ratio: 1;
+			img{
+				width: 100%;
+			}
+		}
+
+		h1{
+			color: $color-accent;
+		}
+	}
+
+	.right{
+		display: flex;
+		justify-content: center;
+		flex-grow: 1;
+
+		h1{
+			color: $gray-text-hover;
+		}
 	}
 }
 
 @media (max-width: 767px) {
-	nav h1{
-		font-size: 4dvh;
+	nav {
+
+		h1 {
+			font-size: 4dvh;
+		}
+
+		.left {
+			min-width: 0rem;
+
+			h1 {
+				display: none;
+			}
+
+			.logo {
+				height: 80%;
+				position: absolute;
+				left: .5rem;
+				top: .5rem;
+			}
+		}
 	}
 }
 
@@ -169,17 +213,13 @@ main aside{
 				}
 			}
 		}
-
-		.buttons.bottom .editButton{
-			display: none;
-		}
 	}
 }
 
 main aside .buttons.top{
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: 0rem 1rem;
 
 	button {
 		text-transform: uppercase;
@@ -284,6 +324,7 @@ main aside .buttons.bottom{
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	gap: 0 1rem;
 
 	button{
 		color: $gray-text-hover;
@@ -309,6 +350,60 @@ main aside .buttons.bottom{
 			margin-inline: .5rem;
 		}
 	}
+}
+
+main aside .createFilterItem{
+	display: flex;
+	/*flex-wrap: wrap;*/
+	align-items: center;
+	gap: 1rem;
+	padding: .5rem;
+	background-color: $gray-350;
+	border-radius: .5rem;
+	margin-top: 2rem;
+	font-family: 'Kanit', sans-serif;
+	box-sizing: border-box;
+
+	input, select{
+		width: 100%;
+		padding: .2rem;
+		box-sizing: border-box;
+	}
+
+	button{
+		margin-left: auto;
+		color: $color-accent;
+		transition: all .2s;
+		padding: .3rem;
+		text-transform: uppercase;
+		border: .1rem solid $color-accent;
+		border-radius: .5rem;
+		aspect-ratio: 1;
+		height: 2rem;
+		display: grid;
+		place-content: center;
+
+		&:hover{
+			color: $gray-350;
+			background-color: $color-accent;
+		}
+	}
+
+	div{
+		display: flex;
+		gap: .5rem;
+		align-items: center;
+		width: 100%;
+
+		button{
+			aspect-ratio: initial;
+		}
+	}
+}
+
+main aside .content .typeID .createFilterItem{
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 //endregion
@@ -377,7 +472,7 @@ main .animals .header .path{
 
 @media (max-width: 767px) {
 	main .animals .header .path {
-		margin-left: 2rem;
+		margin-left: 2.5rem;
 	}
 }
 
@@ -423,6 +518,11 @@ main .animals .header button{
 
 		&.outlined {
 			border: none;
+		}
+
+		&:hover{
+			background-color: transparent !important;
+			color: $color-accent !important;
 		}
 	}
 }
@@ -652,6 +752,13 @@ main .animals .content .animal{
 	}
 }
 
+@media (max-width: 767px) {
+	main .animals .content .animal i {
+		opacity: 1;
+	}
+
+}
+
 //endregion
 
 /*---------- login ----------*/
@@ -795,6 +902,18 @@ main.login{
 .popupEngineModalContent{
 	background-color: $gray-200;
 	color: $color-contrast;
+}
+
+.popupEngineModalHeading{
+	margin-bottom: 1rem;
+}
+
+.popupEngineModalButton{
+	color: $color-accent;
+}
+
+.popupEngineNotification{
+	border: 1px solid $gray-text;
 }
 
 /************ Imports ************/
