@@ -45,7 +45,7 @@
             return $check;
         }
 
-        if ($imageFile["size"] > 1000000) {
+        if ($imageFile["size"] > 10000000) {
             echo "Sorry, your file is too large.";
             return false;
         }

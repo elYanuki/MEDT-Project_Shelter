@@ -283,8 +283,6 @@ function renderAnimal(data){
         image: data.image == null || data.image === "" ? "./img/animal-default.png" : data.image
     }
 
-    console.log(data.name, data.birthdate, processedData.age)
-
     let animal =
         `<section class="animal" data-id="${data.ID}">
             <div class="top">
@@ -423,8 +421,10 @@ function confirmPropertyDropdown(prop, ID){
     if(["acquirydate", "birthdate"].includes(prop)){
         clickedElem.innerText = document.querySelector("#datepicker").value
         currentAnimal[prop] = document.querySelector("#datepicker").value
-        currentAnimal.age = new Date().getFullYear() - new Date(currentAnimal.birthdate).getFullYear()
-        animalHtml.querySelector(".age").innerText = currentAnimal.age
+        if(prop === "birthdate") {
+            currentAnimal.age = new Date().getFullYear() - new Date(currentAnimal.birthdate).getFullYear()
+            animalHtml.querySelector(".age").innerText = currentAnimal.age
+        }
     }
     if(prop === "image"){
         const files = document.querySelector('#imagepicker').files;
@@ -563,7 +563,6 @@ function renderAside(adminMode = false){
 
         }
         if(listObject && item.breed_name !== null) listObject.innerHTML += `<li onclick="renderAnimals('typeID', ${item.type_id}, ${item.breed_id})">${item.breed_name}</li>`
-        console.log(listItem, listObject)
 
     })
     if(listItem) typeHtml.appendChild(listItem)

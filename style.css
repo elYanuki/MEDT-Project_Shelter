@@ -59,6 +59,10 @@ nav {
   position: relative;
   z-index: 10;
 }
+nav .login-nav {
+  display: flex;
+  justify-content: center;
+}
 nav h1 {
   font-size: 5dvh;
   vertical-align: middle;
