@@ -2,7 +2,7 @@
 
 This project is a school project from 2023. It is a App that allows animal shelters to manage their animals by storing their data, assigning them to rooms and owners and filtering for animals.
 
-![image](https://github.com/elYanuki/MEDT-Project_Shelter/assets/70104756/dfe2c06e-6d40-4f81-a799-c7f23e1ef5b9)
+![246622412-dfe2c06e-6d40-4f81-a799-c7f23e1ef5b9](https://github.com/elYanuki/PetPal/assets/70104756/edbcebcf-e8a6-41df-846b-32116d4f23c4)
 
 ## Edit Animal propperties
 Every property opens a edit Menu on click this menu is either:
